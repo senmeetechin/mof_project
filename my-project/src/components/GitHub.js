@@ -1,6 +1,6 @@
 import GitHubLogo from "../assets/github-mark-white.svg";
 
-function Background() {
+function GitHub() {
   return (
     <div className="">
       <a
@@ -18,4 +18,4 @@ function Background() {
   );
 }
 
-export default Background;
+export default GitHub;
