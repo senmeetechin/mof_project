@@ -1,9 +1,11 @@
 import Background from "../components/Background"
+import GitHub from "../components/GitHub"
 import { Link } from "react-router-dom";
 
 function Home() {
   return (
     <div className="flex h-screen w-screen">
+      <GitHub/>
       <header className="flex h-full w-full items-center justify-center">
         <div className="flex flex-col gap-8">
           <h1 className="text-textHead font-fontHead font-bold text-8xl text-center">
