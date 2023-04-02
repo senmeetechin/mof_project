@@ -1,3 +1,5 @@
+import MOFViz from "./MOFViz";
+
 function Card() {
   return (
     <div className="relative flex flex-col h-full w-80 bg-white rounded-2xl">
@@ -5,7 +7,7 @@ function Card() {
         cif_mof_test.31.cif
       </div>
       <div className="h-full w-full px-6 pt-8 pb-3">
-        <div className="border border-black w-full h-full">IMAGE</div>
+        <div className="border border-black w-full h-full relative"><MOFViz/></div>
       </div>
       <div className="flex justify-center h-1/6 items-center">
         <div className="relative bg-gray-300 w-5/6 rounded-2xl text-center text-sm">
