@@ -1,19 +1,19 @@
 /** @type {import('tailwindcss').Config} */
-const defaultTheme = require('tailwindcss/defaultTheme');
+const defaultTheme = require("tailwindcss/defaultTheme");
 
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
-      colors:{
-        bgColor: '#202833',
-        textHead: '#66FCF1'
+      colors: {
+        bgColor: "#202833",
+        textHead: "#66FCF1",
       },
-      fontFamily:{
-        fontHead:['"Lexend"'],
-        fontContent: ['"Roboto"', ...defaultTheme.fontFamily.sans]
-      }
+      fontFamily: {
+        fontHead: ['"Lexend"'],
+        fontContent: ['"Roboto"', ...defaultTheme.fontFamily.sans],
+      },
     },
   },
-  plugins: [],
+  plugins: [require("tailwindcss-opentype")],
 };

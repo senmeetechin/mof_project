@@ -23,7 +23,7 @@ function Card() {
             </div>
             <div className="bg-red-200 flex justify-between font-fontContent">
               <p>Unit cell volume:</p>
-              <p>1250.15 A3</p>
+              <p>1250.15 A<sup>3</sup></p>
             </div>
           </div>
         </div>
