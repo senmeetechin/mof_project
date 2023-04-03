@@ -50,15 +50,11 @@ function Card() {
             </div>
             <div className="flex justify-between font-fontContent">
               <p>Largest included sphere:</p>
-              <p>
-                16.13 A
-              </p>
+              <p>16.13 A</p>
             </div>
             <div className="flex justify-between font-fontContent mb-1">
               <p>Largest free sphere:</p>
-              <p>
-                10.92 A
-              </p>
+              <p>10.92 A</p>
             </div>
             <a
               href="https://drive.google.com/uc?export=download&id=1jerlAGOcoKxXp1RsssT9l_dF0KaZ7EfL"
@@ -80,12 +76,12 @@ function Card() {
     });
   };
   return (
-    <div className="relative flex flex-col h-full w-80 bg-white rounded-2xl">
+    <div className="relative flex flex-col h-80 w-80 bg-white rounded-2xl">
       <div className="bg-gray-300 rounded-t-2xl text-center py-1 text-xl font-fontContent h-10 relative">
         cif_mof_test.31.cif
-        <CgClose className="absolute top-1/2 right-7 transform -translate-y-1/2 text-sm text-gray-500 hover:text-gray-800" />
+        <CgClose className="absolute top-1/2 right-7 transform -translate-y-1/2 text-sm text-gray-500 hover:text-gray-800 cursor-pointer" />
       </div>
-      <div className="h-full w-full px-6 pt-3 pb-3">
+      <div className="h-full w-full px-6 pt-3 pb-0">
         <div className="w-full h-full relative">
           <HiOutlineZoomIn
             className="absolute z-10 right-0 top-0 text-xl text-gray-500 hover:text-gray-800 cursor-pointer bg-white rounded-bl-sm"
@@ -94,7 +90,7 @@ function Card() {
           <MOFViz id="mole-1" />
         </div>
       </div>
-      <div className="flex justify-center h-1/6 items-center">
+      <div className="flex justify-center h-16 items-center">
         <div className="relative bg-gray-300 w-5/6 rounded-2xl text-center text-sm">
           <p className="invisible">PowerTubeSize</p>
           <div className="absolute h-full w-full left-0 top-0 z-10">
