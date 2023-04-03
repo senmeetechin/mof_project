@@ -12,7 +12,7 @@ class MOFViz extends Component {
     // Load the CIF file
     $3Dmol.get(file, function(data) {
         viewer.addModel(data,'cif');
-        viewer.setStyle({sphere:{}});
+        viewer.setStyle({stick:{}}); //sphere
         viewer.zoomTo();
         viewer.render( );
       });
