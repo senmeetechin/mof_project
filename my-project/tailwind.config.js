@@ -8,6 +8,7 @@ module.exports = {
       colors: {
         bgColor: "#202833",
         textHead: "#66FCF1",
+        darkButton: "#46A29F",
       },
       fontFamily: {
         fontHead: ['"Lexend"'],
