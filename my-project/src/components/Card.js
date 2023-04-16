@@ -4,8 +4,38 @@ import { HiOutlineZoomIn } from "react-icons/hi";
 import { FiDownload } from "react-icons/fi";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { useNavigate } from "react-router-dom";
 
 function Card() {
+  const navigate = useNavigate();
+
+  const closeCard = () => {
+    const MySwal = withReactContent(Swal);
+    const name = "str_m1_o1_o1_pcu_sym.9.cif";
+    MySwal.fire({
+      title: "Are you sure?",
+      html: (
+        <div className="">
+          <p className="mb-1">
+            You are going to remove <span className="font-bold">{name}</span>
+          </p>
+          <p>You won't be able to revert this!</p>
+        </div>
+      ),
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+      width: 600,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire("Deleted!", name + " has been deleted.", "success");
+        navigate("/");
+      }
+    });
+  };
+
   const zoomIn = () => {
     const MySwal = withReactContent(Swal);
     MySwal.fire({
@@ -79,7 +109,10 @@ function Card() {
     <div className="relative flex flex-col h-80 w-80 bg-white rounded-2xl">
       <div className="bg-gray-300 rounded-t-2xl text-center py-1 text-xl font-fontContent h-10 relative">
         cif_mof_test.31.cif
-        <CgClose className="absolute top-1/2 right-7 transform -translate-y-1/2 text-sm text-gray-500 hover:text-gray-800 cursor-pointer" />
+        <CgClose
+          className="absolute top-1/2 right-7 transform -translate-y-1/2 text-sm text-gray-500 hover:text-gray-800 cursor-pointer"
+          onClick={closeCard}
+        />
       </div>
       <div className="h-full w-full px-6 pt-3 pb-0">
         <div className="w-full h-full relative">
