@@ -1,13 +1,21 @@
 # ### Activate conda env ###
-# import subprocess
-# import sys
-# def activate_env(env_name):
-#     process = subprocess.Popen(['conda', 'activate', env_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-#     stdout, stderr = process.communicate()
+import subprocess
+import sys
+def activate_env(env_name):
+    process = subprocess.Popen(['conda', 'activate', env_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout, stderr = process.communicate()
     
-#     if process.returncode != 0:
-#         print(f"Failed to activate Conda environment: {stderr.decode('utf-8')}")
-#         sys.exit(1)
+    if stderr:
+        print(f"Failed to activate Conda environment: {stderr.decode('utf-8')}")
+        sys.exit(1)
+
+def deativate_env():
+    process = subprocess.Popen(['conda', 'deactivate'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout, stderr = process.communicate()
+    
+    if stderr:
+        print(f"Failed to deactivate Conda environment: {stderr.decode('utf-8')}")
+        sys.exit(1)
         
 # activate_env("tf_env")
 # ##########################
@@ -21,7 +29,6 @@ import joblib
 
 # Initialize Flask application
 app = Flask(__name__)
-
 
 # load model
 model = tf.keras.models.load_model('./model/best_model_78_0.06193.h5')
