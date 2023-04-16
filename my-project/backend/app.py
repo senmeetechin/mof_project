@@ -1,3 +1,18 @@
+# ### Activate conda env ###
+# import subprocess
+# import sys
+# def activate_env(env_name):
+#     process = subprocess.Popen(['conda', 'activate', env_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+#     stdout, stderr = process.communicate()
+    
+#     if process.returncode != 0:
+#         print(f"Failed to activate Conda environment: {stderr.decode('utf-8')}")
+#         sys.exit(1)
+        
+# activate_env("tf_env")
+# ##########################
+
+### Prediction API ###
 import tensorflow as tf
 from flask import Flask, jsonify, request
 import pandas as pd

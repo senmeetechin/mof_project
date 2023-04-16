@@ -5,9 +5,25 @@ import { FiDownload } from "react-icons/fi";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function Card() {
   const navigate = useNavigate();
+  const [data, setData] = useState([]);
+  const test = [62.46025562286377, 49.77111220359802, 924.3066537233684, 0.6757525261909152, 0.5384696951288397, 8.29259, 4.8776, 8.24409, 7749.63, 1111.04, 1433.67, 1551.07, 0.0, 0.0, 0.0, 4313.64432];
+
+  useEffect(() => {
+    axios.post('/predict', {
+      features: test,
+    })
+      .then(response => {
+        setData(response.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, []);
 
   const closeCard = () => {
     const MySwal = withReactContent(Swal);
@@ -128,6 +144,7 @@ function Card() {
           <p className="invisible">PowerTubeSize</p>
           <div className="absolute h-full w-full left-0 top-0 z-10">
             <p>computing...</p>
+            <p>{data.prediction}</p>
           </div>
           <div className="absolute h-full w-1/2 bg-textHead left-0 top-0 rounded-l-2xl z-0"></div>
         </div>
