@@ -1,25 +1,44 @@
 import Background from "../components/Background";
 import GitHub from "../components/GitHub";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
 
 function Home() {
   const navigate = useNavigate();
+  const [fileList, setFileList] = useState([]);
 
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-
-    const reader = new FileReader();
-
-    reader.onload = () => {
-      localStorage.setItem("fileData", reader.result);
-    };
-
-    reader.readAsText(file);
+  const handleFileChange = (event) => {
+    const collectedFiles = Array.from(event.target.files);
+    setFileList(collectedFiles);
+    console.log(fileList);
   };
 
-  const uploadFile = () => {
-    document.getElementById('fileInput').click();
-    navigate("/upload");
+  // const fileNames = fileList?.map((file) => file.name);
+  console.log(fileList);
+
+  const handleUpload = () => {
+    const formData = new FormData();
+    fileList.forEach((file, i) => {
+      formData.append(`file`, file, file.name);
+    });
+
+    axios
+      .post("/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        navigate("/upload");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const clickSelector = () => {
+    document.getElementById("fileInput").click();
   };
 
   return (
@@ -36,16 +55,42 @@ function Home() {
               Framework in 3 Step
             </p>
             <p>Upload .CIF | Visualize MOF | Get data</p>
+            <div className="text-base mt-4">
+              {fileList.length > 0 &&
+                fileList.map((file, i) => {
+                  return (
+                    <span key={i}>
+                      {file.name}
+                      {i === fileList.length - 1 ? "" : ", "}
+                    </span>
+                  );
+                })}
+            </div>
           </div>
           <div className="flex justify-center">
-            <button
-              className="border-textHead border-2 rounded-full text-textHead text-xl py-1 px-28 font-fontHead cursor-pointer hover:bg-textHead hover:text-bgColor"
-              onClick={uploadFile}
-            >
-              UPLOAD MOF (.cif)
-            </button>
+            {fileList.length === 0 ? (
+              <button
+                className="border-textHead border-2 rounded-full text-textHead text-xl py-1 px-28 font-fontHead cursor-pointer hover:bg-textHead hover:text-bgColor"
+                onClick={clickSelector}
+              >
+                Select MOF (.cif)
+              </button>
+            ) : (
+              <button
+                className="border-textHead border-2 rounded-full text-textHead text-xl py-1 px-28 font-fontHead cursor-pointer hover:bg-textHead hover:text-bgColor"
+                onClick={handleUpload}
+              >
+                UPLOAD MOF
+              </button>
+            )}
 
-            <input type="file" id="fileInput" onChange={handleFileUpload} className="hidden" />
+            <input
+              multiple
+              type="file"
+              id="fileInput"
+              onChange={handleFileChange}
+              className="hidden"
+            />
           </div>
         </div>
       </header>
