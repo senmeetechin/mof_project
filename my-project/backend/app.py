@@ -66,9 +66,9 @@ def combine_feature():
 @app.route('/predict', methods=['POST'])
 def predict():
     # Get the feature data from the request
-    feature_data = request.json['features']
+    feature_data = request.json['mof_path']
     
-    cmd = ['conda', 'run', '-n', 'tf_env', 'python', './predict.py', str(feature_data)[1:-1], MODEL_PATH, SCALER_PATH]
+    cmd = ['conda', 'run', '-n', 'tf_env', 'python', './predict.py', feature_data, MODEL_PATH, SCALER_PATH]
     process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output, error = process.communicate()
     

@@ -11,11 +11,10 @@ import axios from 'axios';
 function Card() {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
-  const test = [62.46025562286377, 49.77111220359802, 924.3066537233684, 0.6757525261909152, 0.5384696951288397, 8.29259, 4.8776, 8.24409, 7749.63, 1111.04, 1433.67, 1551.07, 0.0, 0.0, 0.0, 4313.64432];
 
   useEffect(() => {
     axios.post('/predict', {
-      features: test,
+      "mof_path": "../src/upload/str_m5_o5_o24_sra_sym.63.cif",
     })
       .then(response => {
         setData(response.data);
