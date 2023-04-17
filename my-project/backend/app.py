@@ -1,43 +1,17 @@
-# ### Activate conda env ###
 import subprocess
 import sys
-def activate_env(env_name):
-    process = subprocess.Popen(['conda', 'activate', env_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    stdout, stderr = process.communicate()
-    
-    if stderr:
-        print(f"Failed to activate Conda environment: {stderr.decode('utf-8')}")
-        sys.exit(1)
-
-def deactivate_env():
-    process = subprocess.Popen(['conda', 'deactivate'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    stdout, stderr = process.communicate()
-    
-    if stderr:
-        print(f"Failed to deactivate Conda environment: {stderr.decode('utf-8')}")
-        sys.exit(1)
-# activate_env("tf_env")
-# ##########################
 
 ### Prediction API ###
-import tensorflow as tf
 from flask import Flask, jsonify, request
-import pandas as pd
-import numpy as np
-import joblib
 import os
 
 # Initialize Flask application
 app = Flask(__name__)
 
 # set upload folder
-UPLOAD_DIR = '../src/upload'
-
-# load model
-model = tf.keras.models.load_model('./model/best_model_78_0.06193.h5')
-
-# MinMaxScaler for normalize data
-scaler = joblib.load('./static/minmaxScaler.joblib')
+UPLOAD_DIR  = '../src/upload'
+MODEL_PATH  = './model/best_model_78_0.06193.h5'
+SCALER_PATH = './static/minmaxScaler.joblib'
 
 @app.route('/test', methods=['GET'])
 def test():
@@ -58,26 +32,16 @@ def upload_files():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    # activate to tf_env
-    # activate_env("mof_env")
-    
     # Get the feature data from the request
     feature_data = request.json['features']
     
-    # reshape the input array 
-    feature_array = np.array(feature_data).reshape(1, -1)
-    
-    # normalize data
-    feature_norm = scaler.transform(feature_array)
-    
-    # prediction
-    prediction = model.predict(feature_norm)
+    cmd = ['conda', 'run', '-n', 'tf_env', 'python', './predict.py', str(feature_data)[1:-1], MODEL_PATH, SCALER_PATH]
+    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    # process = subprocess.Popen(["conda", "run", "-n", "tf_env", "python", "./testy.py", str(feature_data)[1:-1]], stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+    output, error = process.communicate()
     
     # format the output as JSON and return
-    output = {'prediction': str(prediction[0][0])}
-    
-    # deactivate tf_env
-    # deactivate_env()
+    output = {'prediction': output.decode("utf-8").split('\n')[1]}
     
     return jsonify(output)
 
