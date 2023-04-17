@@ -5,6 +5,10 @@
 /.pnp
 .pnp.js
 
+# folder
+/src/extracted
+/src/upload
+
 # testing
 /coverage
 

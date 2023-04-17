@@ -29,7 +29,20 @@ def upload_files():
             filename = file.filename
             file.save(os.path.join(UPLOAD_DIR, filename))
         return jsonify({'message': 'File uploaded succesfully'})
-
+    
+@app.route('/getPorE', methods=['POST'])
+def get_porE():
+    # Get mof
+    mof_path = request.json['mof_path']
+    print("\n=== MOF PATH ===", mof_path)
+    
+    # Run extract_porE.py
+    cmd = ['conda', 'run', '-n', 'mof_env', 'python', './extract_porE.py', mof_path]
+    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    output, error = process.communicate()
+    # print("\n=== OUTPUT ===\n", output.decode('utf-8'))
+    return "", 204
+    
 @app.route('/predict', methods=['POST'])
 def predict():
     # Get the feature data from the request
@@ -37,7 +50,6 @@ def predict():
     
     cmd = ['conda', 'run', '-n', 'tf_env', 'python', './predict.py', str(feature_data)[1:-1], MODEL_PATH, SCALER_PATH]
     process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    # process = subprocess.Popen(["conda", "run", "-n", "tf_env", "python", "./testy.py", str(feature_data)[1:-1]], stdout=subprocess.PIPE, stdin=subprocess.PIPE)
     output, error = process.communicate()
     
     # format the output as JSON and return
