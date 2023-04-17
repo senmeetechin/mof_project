@@ -73,7 +73,10 @@ def predict():
     output, error = process.communicate()
     
     # format the output as JSON and return
-    output = {'prediction': output.decode("utf-8").split('\n')[1]}
+    try:
+        output = {'prediction': output.decode("utf-8").split('\n')[1]}
+    except:
+        output = {'prediction': output.decode('utf-8')}
     
     return jsonify(output)
 

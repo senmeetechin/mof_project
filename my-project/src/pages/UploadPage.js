@@ -5,17 +5,17 @@ import { useEffect } from "react";
 import axios from "axios";
 
 function UploadPage() {
-  useEffect(() => {
-    axios.post('/combineFeature', {
-      mof_path: '../src/upload/str_m5_o5_o24_sra_sym.63.cif',
-    })
-      .then(response => {
-        console.log(response)
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios.post('/combineFeature', {
+  //     mof_path: '../src/upload/str_m5_o5_o24_sra_sym.63.cif',
+  //   })
+  //     .then(response => {
+  //       console.log(response)
+  //     })
+  //     .catch(error => {
+  //       console.log(error);
+  //     });
+  // }, []);
   return (
     <div className="flex flex-col h-screen w-screen">
       <GitHub />

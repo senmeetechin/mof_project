@@ -5,21 +5,58 @@ import { FiDownload } from "react-icons/fi";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { useNavigate } from "react-router-dom";
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 function Card() {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [porE, setPorE] = useState(null);
+  const [zeo, setZeo] = useState(null);
+  const [predict, setPredict] = useState(null);
 
   useEffect(() => {
-    axios.post('/predict', {
-      "mof_path": "../src/upload/str_m5_o5_o24_sra_sym.63.cif",
-    })
-      .then(response => {
+    const getPorE = axios.post("/getPorE", {
+      mof_path: "../src/upload/str_m5_o5_o24_sra_sym.63.cif",
+    });
+    const getZeo = axios.post("/getZeo", {
+      mof_path: "../src/upload/str_m5_o5_o24_sra_sym.63.cif",
+    });
+
+    Promise.all([getPorE, getZeo])
+      .then(([poreRes, zeoRes]) => {
+        setPorE(poreRes.status);
+        setZeo(zeoRes.status);
+
+        axios
+          .post("/combineFeature", {
+            mof_path: "../src/upload/str_m5_o5_o24_sra_sym.63.cif",
+          })
+          .then((_) => {
+            axios
+              .post("/predict", {
+                mof_path: "../src/upload/str_m5_o5_o24_sra_sym.63.cif",
+              })
+              .then((res) => {
+                setPredict(res.data);
+              })
+              .catch((error) => {
+                console.log("Predict error", error);
+              });
+          });
+      })
+      .catch((error) => {
+        console.log("Extract error", error);
+      });
+
+    axios
+      .post("/predict", {
+        mof_path: "../src/upload/str_m5_o5_o24_sra_sym.63.cif",
+      })
+      .then((response) => {
         setData(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   }, []);
@@ -143,7 +180,7 @@ function Card() {
           <p className="invisible">PowerTubeSize</p>
           <div className="absolute h-full w-full left-0 top-0 z-10">
             <p>computing...</p>
-            <p>{data.prediction}</p>
+            <p>{predict && predict.prediction}</p>
           </div>
           <div className="absolute h-full w-1/2 bg-textHead left-0 top-0 rounded-l-2xl z-0"></div>
         </div>
