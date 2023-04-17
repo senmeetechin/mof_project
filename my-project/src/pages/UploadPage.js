@@ -6,7 +6,7 @@ import axios from "axios";
 
 function UploadPage() {
   useEffect(() => {
-    axios.post('/getZeo', {
+    axios.post('/combineFeature', {
       mof_path: '../src/upload/str_m5_o5_o24_sra_sym.63.cif',
     })
       .then(response => {
@@ -27,7 +27,7 @@ function UploadPage() {
       <div className="flex justify-center mt-10 h-full mb-5">
         <div className="flex flex-col w-3/4 h-5/6 justify-between pb-5">
           <div className="flex justify-center gap-2 h-full w-full mb-10">
-            {/* <Card/> */}
+            <Card/>
           </div>
           <div className="flex justify-center">
             <button className="border-textHead border-2 rounded-full text-textHead text-xl py-1 w-1/4 font-fontHead cursor-pointer hover:bg-textHead hover:text-bgColor">

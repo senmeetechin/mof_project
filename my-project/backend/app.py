@@ -45,10 +45,19 @@ def get_porE():
 def get_zeo():
     # Get mof
     mof_path = request.json['mof_path']
-    print("\n=== MOF PATH ===", mof_path)
     
-    # Run extract_porE.py
+    # Run extract_zeo.py
     cmd = ['conda', 'run', '-n', 'mof_env', 'python', './extract_zeo.py', mof_path]
+    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    output, error = process.communicate()
+    return "", 204
+
+@app.route('/combineFeature', methods=['POST'])
+def combine_feature():
+    mof_path = request.json['mof_path']
+    
+    # Run combine_feature.py
+    cmd = ['conda', 'run', '-n', 'mof_env', 'python', './combine_feature.py', mof_path]
     process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output, error = process.communicate()
     print("\n=== OUTPUT ===\n", output.decode('utf-8'))
