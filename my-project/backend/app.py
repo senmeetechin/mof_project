@@ -34,13 +34,24 @@ def upload_files():
 def get_porE():
     # Get mof
     mof_path = request.json['mof_path']
-    print("\n=== MOF PATH ===", mof_path)
     
     # Run extract_porE.py
     cmd = ['conda', 'run', '-n', 'mof_env', 'python', './extract_porE.py', mof_path]
     process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output, error = process.communicate()
-    # print("\n=== OUTPUT ===\n", output.decode('utf-8'))
+    return "", 204
+
+@app.route('/getZeo', methods=['POST'])
+def get_zeo():
+    # Get mof
+    mof_path = request.json['mof_path']
+    print("\n=== MOF PATH ===", mof_path)
+    
+    # Run extract_porE.py
+    cmd = ['conda', 'run', '-n', 'mof_env', 'python', './extract_zeo.py', mof_path]
+    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    output, error = process.communicate()
+    print("\n=== OUTPUT ===\n", output.decode('utf-8'))
     return "", 204
     
 @app.route('/predict', methods=['POST'])

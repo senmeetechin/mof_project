@@ -6,7 +6,7 @@ import axios from "axios";
 
 function UploadPage() {
   useEffect(() => {
-    axios.post('/getPorE', {
+    axios.post('/getZeo', {
       mof_path: '../src/upload/str_m5_o5_o24_sra_sym.63.cif',
     })
       .then(response => {

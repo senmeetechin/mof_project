@@ -68,9 +68,9 @@ def extract_pore(mof_path):
         mof_data = PorE(mof_path)
         mof_name = mof_path.split('/')[-1].replace('.cif', '')
         mof_data.to_csv(os.path.join('../src/extracted', mof_name+'_porE.csv'), index=False)
-        print(f'{mof_name} has already extracted')
+        print(f'{mof_name} has already extracted by porE')
     except:
-        print(f'{mof_name} failed to extract')
+        print(f'{mof_name} failed to extract by porE')
 
 if __name__ == '__main__':
     mof_path = sys.argv[1]
