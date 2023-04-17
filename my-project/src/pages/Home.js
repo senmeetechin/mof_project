@@ -87,6 +87,7 @@ function Home() {
             <input
               multiple
               type="file"
+              accept=".cif"
               id="fileInput"
               onChange={handleFileChange}
               className="hidden"
