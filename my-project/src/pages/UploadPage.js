@@ -1,10 +1,13 @@
 import Background from "../components/Background";
 import GitHub from "../components/GitHub";
-import Card from "../components/Card"
+import Card from "../components/Card";
 import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import axios from "axios";
 
-function UploadPage() {
+function UploadPage(props) {
+  const { state } = useLocation();
+  const fileList = state.fileList;
   return (
     <div className="flex flex-col h-screen w-screen">
       <GitHub />
@@ -16,7 +19,7 @@ function UploadPage() {
       <div className="flex justify-center mt-10 h-full mb-5">
         <div className="flex flex-col w-3/4 h-5/6 justify-between pb-5">
           <div className="flex justify-center gap-2 h-full w-full mb-10">
-            <Card/>
+            <Card fname={fileList[0]} />
           </div>
           <div className="flex justify-center">
             <button className="border-textHead border-2 bg-opacity-75 bg-bgColor rounded-full text-textHead text-xl py-1 w-1/4 font-fontHead cursor-pointer hover:bg-textHead hover:text-bgColor">

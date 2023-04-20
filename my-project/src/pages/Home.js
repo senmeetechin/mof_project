@@ -11,11 +11,7 @@ function Home() {
   const handleFileChange = (event) => {
     const collectedFiles = Array.from(event.target.files);
     setFileList(collectedFiles);
-    console.log(fileList);
   };
-
-  // const fileNames = fileList?.map((file) => file.name);
-  console.log(fileList);
 
   const handleUpload = () => {
     const formData = new FormData();
@@ -30,7 +26,9 @@ function Home() {
         },
       })
       .then((response) => {
-        navigate("/upload");
+        navigate("/upload", {
+          state: { fileList: fileList.map((file) => file.name) },
+        });
       })
       .catch((error) => {
         console.log(error);

@@ -4,11 +4,12 @@ import { HiOutlineZoomIn } from "react-icons/hi";
 import { FiDownload } from "react-icons/fi";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-function Card() {
+function Card(props) {
+  const fname = props.fname;
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [data, setData] = useState([]);
@@ -16,48 +17,48 @@ function Card() {
   const [zeo, setZeo] = useState(null);
   const [predict, setPredict] = useState(null);
 
-  useEffect(() => {
-    const getPorE = axios.post("/getPorE", {
-      mof_path: "../src/upload/str_m5_o5_o24_sra_sym.63.cif",
-    });
-    const getZeo = axios.post("/getZeo", {
-      mof_path: "../src/upload/str_m5_o5_o24_sra_sym.63.cif",
-    });
+  // useEffect(() => {
+  //   const getPorE = axios.post("/getPorE", {
+  //     mof_path: "../src/upload/str_m5_o5_o24_sra_sym.63.cif",
+  //   });
+  //   const getZeo = axios.post("/getZeo", {
+  //     mof_path: "../src/upload/str_m5_o5_o24_sra_sym.63.cif",
+  //   });
 
-    Promise.all([getPorE, getZeo])
-      .then(([poreRes, zeoRes]) => {
-        setStep((step) => step + 1);
-        setPorE(poreRes.status);
-        setStep((step) => step + 1);
-        setZeo(zeoRes.status);
+  //   Promise.all([getPorE, getZeo])
+  //     .then(([poreRes, zeoRes]) => {
+  //       setStep((step) => step + 1);
+  //       setPorE(poreRes.status);
+  //       setStep((step) => step + 1);
+  //       setZeo(zeoRes.status);
 
-        axios
-          .post("/combineFeature", {
-            mof_path: "../src/upload/str_m5_o5_o24_sra_sym.63.cif",
-          })
-          .then((_) => {
-            setStep((step) => step + 1);
-            axios
-              .post("/predict", {
-                mof_path: "../src/upload/str_m5_o5_o24_sra_sym.63.cif",
-              })
-              .then((res) => {
-                setStep((step) => step + 1);
-                setPredict(res.data);
-              })
-              .catch((error) => {
-                console.log("Predict error", error);
-              });
-          });
-      })
-      .catch((error) => {
-        console.log("Extract error", error);
-      });
-  }, []);
+  //       axios
+  //         .post("/combineFeature", {
+  //           mof_path: "../src/upload/str_m5_o5_o24_sra_sym.63.cif",
+  //         })
+  //         .then((_) => {
+  //           setStep((step) => step + 1);
+  //           axios
+  //             .post("/predict", {
+  //               mof_path: "../src/upload/str_m5_o5_o24_sra_sym.63.cif",
+  //             })
+  //             .then((res) => {
+  //               setStep((step) => step + 1);
+  //               setPredict(res.data);
+  //             })
+  //             .catch((error) => {
+  //               console.log("Predict error", error);
+  //             });
+  //         });
+  //     })
+  //     .catch((error) => {
+  //       console.log("Extract error", error);
+  //     });
+  // }, []);
 
   const closeCard = () => {
     const MySwal = withReactContent(Swal);
-    const name = "str_m1_o1_o1_pcu_sym.9.cif";
+    const name = fname;
     MySwal.fire({
       title: "Are you sure?",
       html: (
@@ -91,9 +92,7 @@ function Card() {
             <MOFViz id="mole-1-show" />
           </div>
           <div className="col-span-3 text-left flex flex-col mr-8 gap-2">
-            <p className="text-2xl font-bold font-fontHead mb-1">
-              cif_mof_test.31.cif
-            </p>
+            <p className="text-2xl font-bold font-fontHead mb-1">{fname}</p>
             <div className="flex justify-between font-fontContent">
               <p>Molecular weight:</p>
               <p>5,312.93 u</p>
@@ -154,7 +153,7 @@ function Card() {
   return (
     <div className="relative flex flex-col h-80 w-80 bg-white rounded-2xl">
       <div className="bg-gray-300 rounded-t-2xl text-center py-1 text-xl font-fontContent h-10 relative">
-        cif_mof_test.31.cif
+        <p title={fname}>{fname.slice(0,20)}{fname.length>=22 && "..."}</p>
         <CgClose
           className="absolute top-1/2 right-7 transform -translate-y-1/2 text-sm text-gray-500 hover:text-gray-800 cursor-pointer"
           onClick={closeCard}
