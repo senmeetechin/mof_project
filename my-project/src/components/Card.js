@@ -89,7 +89,7 @@ function Card(props) {
       html: (
         <div className="grid grid-cols-5 py-3 gap-5">
           <div className="col-span-2 h-full relative my-auto">
-            <MOFViz id="mole-1-show" />
+            <MOFViz id="mole-1-show" fpath={"../upload/" + fname} />
           </div>
           <div className="col-span-3 text-left flex flex-col mr-8 gap-2">
             <p className="text-2xl font-bold font-fontHead mb-1">{fname}</p>
@@ -153,7 +153,10 @@ function Card(props) {
   return (
     <div className="relative flex flex-col h-80 w-80 bg-white rounded-2xl">
       <div className="bg-gray-300 rounded-t-2xl text-center py-1 text-xl font-fontContent h-10 relative">
-        <p title={fname}>{fname.slice(0,20)}{fname.length>=22 && "..."}</p>
+        <p title={fname}>
+          {fname.slice(0, 20)}
+          {fname.length >= 22 && "..."}
+        </p>
         <CgClose
           className="absolute top-1/2 right-7 transform -translate-y-1/2 text-sm text-gray-500 hover:text-gray-800 cursor-pointer"
           onClick={closeCard}
