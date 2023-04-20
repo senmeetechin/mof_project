@@ -10,6 +10,7 @@ import axios from "axios";
 
 function Card() {
   const navigate = useNavigate();
+  const [step, setStep] = useState(0);
   const [data, setData] = useState([]);
   const [porE, setPorE] = useState(null);
   const [zeo, setZeo] = useState(null);
@@ -25,7 +26,9 @@ function Card() {
 
     Promise.all([getPorE, getZeo])
       .then(([poreRes, zeoRes]) => {
+        setStep((step) => step + 1);
         setPorE(poreRes.status);
+        setStep((step) => step + 1);
         setZeo(zeoRes.status);
 
         axios
@@ -33,11 +36,13 @@ function Card() {
             mof_path: "../src/upload/str_m5_o5_o24_sra_sym.63.cif",
           })
           .then((_) => {
+            setStep((step) => step + 1);
             axios
               .post("/predict", {
                 mof_path: "../src/upload/str_m5_o5_o24_sra_sym.63.cif",
               })
               .then((res) => {
+                setStep((step) => step + 1);
                 setPredict(res.data);
               })
               .catch((error) => {
@@ -47,17 +52,6 @@ function Card() {
       })
       .catch((error) => {
         console.log("Extract error", error);
-      });
-
-    axios
-      .post("/predict", {
-        mof_path: "../src/upload/str_m5_o5_o24_sra_sym.63.cif",
-      })
-      .then((response) => {
-        setData(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
       });
   }, []);
 
@@ -176,14 +170,35 @@ function Card() {
         </div>
       </div>
       <div className="flex justify-center h-16 items-center">
-        <div className="relative bg-gray-300 w-5/6 rounded-2xl text-center text-sm">
-          <p className="invisible">PowerTubeSize</p>
-          <div className="absolute h-full w-full left-0 top-0 z-10">
-            <p>computing...</p>
-            <p>{predict && predict.prediction}</p>
+        {step < 4 ? (
+          <div className="relative bg-gray-300 w-5/6 rounded-2xl text-center text-sm">
+            <p className="invisible">PowerTubeSize</p>
+            <div className="absolute h-full w-full left-0 top-0 z-10">
+              <p>{step < 3 ? "extracting..." : "predicting..."}</p>
+            </div>
+            {step > 0 && (
+              <div
+                className={
+                  "absolute h-full bg-textHead left-0 top-0 rounded-l-2xl z-0 " +
+                  "w-" +
+                  step.toString() +
+                  "/4"
+                }
+              ></div>
+            )}
           </div>
-          <div className="absolute h-full w-1/2 bg-textHead left-0 top-0 rounded-l-2xl z-0"></div>
-        </div>
+        ) : (
+          <div className="relative flex justify-center bg-white w-full rounded-2xl text-center gap-2">
+            <p className="text-base">
+              CO<sub>2</sub> adsorption:{" "}
+              <span className="text-lg">
+                {predict && parseFloat(predict.prediction).toFixed(4)}
+              </span>{" "}
+              mmol/g
+            </p>
+            <FiDownload className="my-auto" />
+          </div>
+        )}
       </div>
     </div>
   );

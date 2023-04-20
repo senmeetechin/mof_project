@@ -5,17 +5,6 @@ import { useEffect } from "react";
 import axios from "axios";
 
 function UploadPage() {
-  // useEffect(() => {
-  //   axios.post('/combineFeature', {
-  //     mof_path: '../src/upload/str_m5_o5_o24_sra_sym.63.cif',
-  //   })
-  //     .then(response => {
-  //       console.log(response)
-  //     })
-  //     .catch(error => {
-  //       console.log(error);
-  //     });
-  // }, []);
   return (
     <div className="flex flex-col h-screen w-screen">
       <GitHub />
@@ -30,7 +19,7 @@ function UploadPage() {
             <Card/>
           </div>
           <div className="flex justify-center">
-            <button className="border-textHead border-2 rounded-full text-textHead text-xl py-1 w-1/4 font-fontHead cursor-pointer hover:bg-textHead hover:text-bgColor">
+            <button className="border-textHead border-2 bg-opacity-75 bg-bgColor rounded-full text-textHead text-xl py-1 w-1/4 font-fontHead cursor-pointer hover:bg-textHead hover:text-bgColor">
               ADD MOF (.cif)
             </button>
           </div>

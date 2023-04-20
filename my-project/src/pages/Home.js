@@ -67,15 +67,16 @@ function Home() {
                 })}
             </div>
           </div>
-          <div className="flex justify-center">
-            {fileList.length === 0 ? (
-              <button
-                className="border-textHead border-2 rounded-full text-textHead text-xl py-1 px-28 font-fontHead cursor-pointer hover:bg-textHead hover:text-bgColor"
-                onClick={clickSelector}
-              >
-                Select MOF (.cif)
-              </button>
-            ) : (
+          <div className="flex justify-center gap-2">
+            (
+            <button
+              className="border-textHead border-2 rounded-full text-textHead text-xl py-1 px-28 font-fontHead cursor-pointer hover:bg-textHead hover:text-bgColor"
+              onClick={clickSelector}
+            >
+              Select MOF (.cif)
+            </button>
+            ){" "}
+            {fileList.length > 0 && (
               <button
                 className="border-textHead border-2 rounded-full text-textHead text-xl py-1 px-28 font-fontHead cursor-pointer hover:bg-textHead hover:text-bgColor"
                 onClick={handleUpload}
@@ -83,9 +84,8 @@ function Home() {
                 UPLOAD MOF
               </button>
             )}
-
             <input
-              multiple
+              // multiple
               type="file"
               accept=".cif"
               id="fileInput"
