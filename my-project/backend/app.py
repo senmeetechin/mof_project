@@ -33,7 +33,8 @@ def upload_files():
 @app.route('/getPorE', methods=['POST'])
 def get_porE():
     # Get mof
-    mof_path = request.json['mof_path']
+    mof_name = request.json['mof_name']
+    mof_path = os.path.join(UPLOAD_DIR, mof_name)
     
     # Run extract_porE.py
     cmd = ['conda', 'run', '-n', 'mof_env', 'python', './extract_porE.py', mof_path]
@@ -44,7 +45,8 @@ def get_porE():
 @app.route('/getZeo', methods=['POST'])
 def get_zeo():
     # Get mof
-    mof_path = request.json['mof_path']
+    mof_name = request.json['mof_name']
+    mof_path = os.path.join(UPLOAD_DIR, mof_name)
     
     # Run extract_zeo.py
     cmd = ['conda', 'run', '-n', 'mof_env', 'python', './extract_zeo.py', mof_path]
@@ -54,24 +56,25 @@ def get_zeo():
 
 @app.route('/combineFeature', methods=['POST'])
 def combine_feature():
-    mof_path = request.json['mof_path']
+    mof_name = request.json['mof_name']
     
     # Run combine_feature.py
-    cmd = ['conda', 'run', '-n', 'mof_env', 'python', './combine_feature.py', mof_path]
+    cmd = ['conda', 'run', '-n', 'mof_env', 'python', './combine_feature.py', mof_name]
     process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output, error = process.communicate()
-    print("\n=== OUTPUT ===\n", output.decode('utf-8'))
+    # print("\n=== OUTPUT ===\n", output.decode('utf-8'))
     return "", 204
     
 @app.route('/predict', methods=['POST'])
 def predict():
     # Get the feature data from the request
-    feature_data = request.json['mof_path']
+    mof_name = request.json['mof_name']
     
-    cmd = ['conda', 'run', '-n', 'tf_env', 'python', './predict.py', feature_data, MODEL_PATH, SCALER_PATH]
+    cmd = ['conda', 'run', '-n', 'tf_env', 'python', './predict.py', mof_name, MODEL_PATH, SCALER_PATH]
     process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output, error = process.communicate()
     
+    print(output.decode("utf-8"))
     # format the output as JSON and return
     try:
         output = {'prediction': output.decode("utf-8").split('\n')[1]}

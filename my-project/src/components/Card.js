@@ -17,44 +17,45 @@ function Card(props) {
   const [zeo, setZeo] = useState(null);
   const [predict, setPredict] = useState(null);
 
-  // useEffect(() => {
-  //   const getPorE = axios.post("/getPorE", {
-  //     mof_path: "../src/upload/str_m5_o5_o24_sra_sym.63.cif",
-  //   });
-  //   const getZeo = axios.post("/getZeo", {
-  //     mof_path: "../src/upload/str_m5_o5_o24_sra_sym.63.cif",
-  //   });
+  useEffect(() => {
+    const getPorE = axios.post("/getPorE", {
+      mof_name: fname,
+    });
+    const getZeo = axios.post("/getZeo", {
+      mof_name: fname,
+    });
 
-  //   Promise.all([getPorE, getZeo])
-  //     .then(([poreRes, zeoRes]) => {
-  //       setStep((step) => step + 1);
-  //       setPorE(poreRes.status);
-  //       setStep((step) => step + 1);
-  //       setZeo(zeoRes.status);
+    Promise.all([getPorE, getZeo])
+      .then(([poreRes, zeoRes]) => {
+        setStep((step) => step + 1);
+        setPorE(poreRes.status);
+        setStep((step) => step + 1);
+        setZeo(zeoRes.status);
 
-  //       axios
-  //         .post("/combineFeature", {
-  //           mof_path: "../src/upload/str_m5_o5_o24_sra_sym.63.cif",
-  //         })
-  //         .then((_) => {
-  //           setStep((step) => step + 1);
-  //           axios
-  //             .post("/predict", {
-  //               mof_path: "../src/upload/str_m5_o5_o24_sra_sym.63.cif",
-  //             })
-  //             .then((res) => {
-  //               setStep((step) => step + 1);
-  //               setPredict(res.data);
-  //             })
-  //             .catch((error) => {
-  //               console.log("Predict error", error);
-  //             });
-  //         });
-  //     })
-  //     .catch((error) => {
-  //       console.log("Extract error", error);
-  //     });
-  // }, []);
+        axios
+          .post("/combineFeature", {
+            mof_name: fname,
+          })
+          .then((_) => {
+            setStep((step) => step + 1);
+            axios
+              .post("/predict", {
+                mof_name: fname,
+              })
+              .then((res) => {
+                setStep((step) => step + 1);
+                setPredict(res.data);
+                console.log("Prediction", res.data)
+              })
+              .catch((error) => {
+                console.log("Predict error", error);
+              });
+          });
+      })
+      .catch((error) => {
+        console.log("Extract error", error);
+      });
+  }, []);
 
   const closeCard = () => {
     const MySwal = withReactContent(Swal);
@@ -89,7 +90,7 @@ function Card(props) {
       html: (
         <div className="grid grid-cols-5 py-3 gap-5">
           <div className="col-span-2 h-full relative my-auto">
-            <MOFViz id="mole-1-show" fpath={"../upload/" + fname} />
+            {<MOFViz id="mole-1-show" fpath={fname} />}
           </div>
           <div className="col-span-3 text-left flex flex-col mr-8 gap-2">
             <p className="text-2xl font-bold font-fontHead mb-1">{fname}</p>
@@ -168,7 +169,8 @@ function Card(props) {
             className="absolute z-10 right-0 top-0 text-xl text-gray-500 hover:text-gray-800 cursor-pointer bg-white rounded-bl-sm"
             onClick={zoomIn}
           />
-          <MOFViz id="mole-1" />
+          {/* {fname} */}
+          {<MOFViz id="mole-1" fpath={fname} />}
         </div>
       </div>
       <div className="flex justify-center h-16 items-center">
