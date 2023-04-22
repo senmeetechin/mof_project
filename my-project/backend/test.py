@@ -1,14 +1,10 @@
 import requests
-import pandas as pd
-import numpy as np
 
-# download feature csv
-test_df = pd.read_csv('./dummy_data/TEST.csv')
-test = np.array(test_df.iloc[1])
+# Test
+mof_name = "str_m5_o5_o24_sra_sym.63.cif"
 
 # send array to Flask API
-response = requests.post('http://127.0.0.1:5000/predict', json={'features': test.tolist()})
-# response = requests.get('http://127.0.0.1:5000/test')
+response = requests.get('http://127.0.0.1:5000/data', json={'mof_name': mof_name})
 
 # print prediction
-print(response.json()['prediction'])
+print(response.json())
