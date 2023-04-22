@@ -95,7 +95,7 @@ def predict():
             '../src/extracted', mof_name.replace('.cif', '')+'_result.csv'))
         result = str(result['CO2_adsorption'][0])
     else:
-        result = "ERROR"
+        result = "0.0"
 
     print(result)
 
@@ -110,8 +110,31 @@ def predict():
 
 @app.route('/data', methods=['GET'])
 def get_data():
+    mof_name = request.json['mof_name']
+    mof_name = mof_name.replace('.cif', '')
+
+    result = pd.read_csv(os.path.join(
+        '../src/extracted', mof_name+'_result.csv'))
+    data = result.iloc[0]
     output = {
-        'test': "test"
+        'name': data['name'],
+        'Phi_void': data['Phi_void'],
+        'Phi_acc': data['Phi_acc'],
+        'density': data['density'],
+        'poreV_void': data['poreV_void'],
+        'poreV_acc': data['poreV_acc'],
+        'Di': data['Di'],
+        'Df': data['Df'],
+        'Dif': data['Dif'],
+        'volume': data['volume'],
+        'ASA_A2': data['ASA_A2'],
+        'ASA_m2/cm3': data['ASA_m2/cm3'],
+        'ASA_m2/g': data['ASA_m2/g'],
+        'NASA_A2': data['NASA_A2'],
+        'NASA_m2/cm3': data['NASA_m2/cm3'],
+        'NASA_m2/g': data['NASA_m2/g'],
+        'weight': data['weight'],
+        'CO2_adsorption': data['CO2_adsorption']
     }
     return jsonify(output)
 
