@@ -110,32 +110,108 @@ def predict():
 
 @app.route('/data', methods=['GET'])
 def get_data():
+    # get mof_name from request
     mof_name = request.json['mof_name']
     mof_name = mof_name.replace('.cif', '')
 
-    result = pd.read_csv(os.path.join(
-        '../src/extracted', mof_name+'_result.csv'))
-    data = result.iloc[0]
+    # initial data
     output = {
-        'name': data['name'],
-        'Phi_void': data['Phi_void'],
-        'Phi_acc': data['Phi_acc'],
-        'density': data['density'],
-        'poreV_void': data['poreV_void'],
-        'poreV_acc': data['poreV_acc'],
-        'Di': data['Di'],
-        'Df': data['Df'],
-        'Dif': data['Dif'],
-        'volume': data['volume'],
-        'ASA_A2': data['ASA_A2'],
-        'ASA_m2/cm3': data['ASA_m2/cm3'],
-        'ASA_m2/g': data['ASA_m2/g'],
-        'NASA_A2': data['NASA_A2'],
-        'NASA_m2/cm3': data['NASA_m2/cm3'],
-        'NASA_m2/g': data['NASA_m2/g'],
-        'weight': data['weight'],
-        'CO2_adsorption': data['CO2_adsorption']
+        'name': mof_name+".cif",
+        'Phi_void': None,
+        'Phi_acc': None,
+        'density': None,
+        'poreV_void': None,
+        'poreV_acc': None,
+        'Di': None,
+        'Df': None,
+        'Dif': None,
+        'volume': None,
+        'ASA_A2': None,
+        'ASA_m2/cm3': None,
+        'ASA_m2/g': None,
+        'NASA_A2': None,
+        'NASA_m2/cm3': None,
+        'NASA_m2/g': None,
+        'weight': None,
+        'CO2_adsorption': None
     }
+
+    if os.path.exists(os.path.join(
+            '../src/extracted', mof_name+'_result.csv')):
+        result = pd.read_csv(os.path.join(
+            '../src/extracted', mof_name+'_result.csv'))
+        data = result.iloc[0]
+        output = {
+            'name': data['name'],
+            'Phi_void': data['Phi_void'],
+            'Phi_acc': data['Phi_acc'],
+            'density': data['density'],
+            'poreV_void': data['poreV_void'],
+            'poreV_acc': data['poreV_acc'],
+            'Di': data['Di'],
+            'Df': data['Df'],
+            'Dif': data['Dif'],
+            'volume': data['volume'],
+            'ASA_A2': data['ASA_A2'],
+            'ASA_m2/cm3': data['ASA_m2/cm3'],
+            'ASA_m2/g': data['ASA_m2/g'],
+            'NASA_A2': data['NASA_A2'],
+            'NASA_m2/cm3': data['NASA_m2/cm3'],
+            'NASA_m2/g': data['NASA_m2/g'],
+            'weight': data['weight'],
+            'CO2_adsorption': data['CO2_adsorption']
+        }
+    elif os.path.exists(os.path.join(
+            '../src/extracted', mof_name+'_combine.csv')):
+        result = pd.read_csv(os.path.join(
+            '../src/extracted', mof_name+'_combine.csv'))
+        data = result.iloc[0]
+        output['name']: data['name']
+        output['Phi_void']: data['Phi_void']
+        output['Phi_acc']: data['Phi_acc']
+        output['density']: data['density']
+        output['poreV_void']: data['poreV_void']
+        output['poreV_acc']: data['poreV_acc']
+        output['Di']: data['Di']
+        output['Df']: data['Df']
+        output['Dif']: data['Dif']
+        output['volume']: data['volume']
+        output['ASA_A2']: data['ASA_A2']
+        output['ASA_m2/cm3']: data['ASA_m2/cm3']
+        output['ASA_m2/g']: data['ASA_m2/g']
+        output['NASA_A2']: data['NASA_A2']
+        output['NASA_m2/cm3']: data['NASA_m2/cm3']
+        output['NASA_m2/g']: data['NASA_m2/g']
+        output['weight']: data['weight']
+    else:
+        if os.path.exists(os.path.join(
+                '../src/extracted', mof_name+'_porE.csv')):
+            result = pd.read_csv(os.path.join(
+                '../src/extracted', mof_name+'_porE.csv'))
+            data = result.iloc[0]
+            output['name']: data['name']
+            output['Phi_void']: data['Phi_void']
+            output['Phi_acc']: data['Phi_acc']
+            output['density']: data['density']
+            output['poreV_void']: data['poreV_void']
+            output['poreV_acc']: data['poreV_acc']
+        if os.path.exists(os.path.join(
+                '../src/extracted', mof_name+'_zeo.csv')):
+            result = pd.read_csv(os.path.join(
+                '../src/extracted', mof_name+'_zeo.csv'))
+            output['name']: data['name']
+            output['Di']: data['Di']
+            output['Df']: data['Df']
+            output['Dif']: data['Dif']
+            output['volume']: data['volume']
+            output['ASA_A2']: data['ASA_A2']
+            output['ASA_m2/cm3']: data['ASA_m2/cm3']
+            output['ASA_m2/g']: data['ASA_m2/g']
+            output['NASA_A2']: data['NASA_A2']
+            output['NASA_m2/cm3']: data['NASA_m2/cm3']
+            output['NASA_m2/g']: data['NASA_m2/g']
+            output['weight']: data['weight']
+            
     return jsonify(output)
 
 
