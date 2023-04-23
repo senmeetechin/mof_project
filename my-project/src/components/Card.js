@@ -304,7 +304,7 @@ function Card(props) {
   const downloadResult = () => {
     var name = fname.replace(".cif", "") + "_result.csv";
     var dataPath = require("../extracted/" + name);
-    saveAs(dataPath, name)
+    saveAs(dataPath, name);
   };
 
   return (
@@ -323,7 +323,7 @@ function Card(props) {
         <div className="w-full h-full relative">
           <HiOutlineZoomIn
             className="absolute z-10 right-0 top-0 text-xl text-gray-500 hover:text-gray-800 cursor-pointer bg-white rounded-bl-sm"
-            onClick={zoomIn()}
+            onClick={zoomIn}
           />
 
           {<MOFViz id="mole-1" fpath={fname} />}
