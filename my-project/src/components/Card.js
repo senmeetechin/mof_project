@@ -7,6 +7,8 @@ import withReactContent from "sweetalert2-react-content";
 import { useLocation, useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { saveAs } from "file-saver";
+import { download } from "3dmol";
 
 function Card(props) {
   const fname = props.fname;
@@ -274,24 +276,21 @@ function Card(props) {
                 <p>
                   CO<sub>2</sub> adsorption capacity:
                 </p>
-                
+
                 <p>
                   <span>{data && data["CO2_adsorption"].toFixed(2)}</span>{" "}
                   mmol/g
                 </p>
-                
               </div>
             )}
-            <a
-              href="https://drive.google.com/uc?export=download&id=1jerlAGOcoKxXp1RsssT9l_dF0KaZ7EfL"
-              // target="_blank"
-              rel="noreferrer"
+            <button
+              className="border-darkButton border-2 rounded-full text-darkButton text-base py-1 w-full mt-2 font-fontHead cursor-pointer hover:bg-darkButton hover:text-white flex justify-center disabled:bg-white disabled:text-darkButton disabled:cursor-wait"
+              disabled={data && data["CO2_adsorption"] !== -99 ? false : true}
+              onClick={downloadResult}
             >
-              <button className="border-darkButton border-2 rounded-full text-darkButton text-base py-1 w-full mt-2 font-fontHead cursor-pointer hover:bg-darkButton hover:text-white flex justify-center">
-                <FiDownload className="my-auto mr-2" />
-                download result (.csv)
-              </button>
-            </a>
+              <FiDownload className="my-auto mr-2" />
+              download result (.csv)
+            </button>
             {/* Phi_acc Phi_void ASA_cm3 densify Di Df */}
           </div>
         </div>
@@ -301,6 +300,13 @@ function Card(props) {
       width: 1000,
     });
   };
+
+  const downloadResult = () => {
+    var name = fname.replace(".cif", "") + "_result.csv";
+    var dataPath = require("../extracted/" + name);
+    saveAs(dataPath, name)
+  };
+
   return (
     <div className="relative flex flex-col h-80 w-80 bg-white rounded-2xl">
       <div className="bg-gray-300 rounded-t-2xl text-center py-1 text-xl font-fontContent h-10 relative">
