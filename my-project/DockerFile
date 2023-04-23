@@ -1,48 +1,46 @@
-# Use a Node.js base image version 16
-FROM node:16
+# Base image
+FROM python:3.9-slim-buster AS base
 
-# Set the working directory to /app
+# Set working directory
 WORKDIR /app
 
-# Copy the package.json and package-lock.json files to the container
-COPY package*.json ./
+# Copy the requirements files and create the virtual environments
+COPY env/requirements.txt .
+COPY env/base.yml .
+COPY env/mof_env.yml .
+COPY env/tf_env.yml .
 
-# Install dependencies
-RUN npm install
+# Install Conda and create the virtual environments
+RUN apt-get update && apt-get install -y curl \
+    && curl -sSLO https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+    && bash Miniconda3-latest-Linux-x86_64.sh -bfp /usr/local \
+    && export PATH=/opt/conda/bin:$PATH \
+    # && conda env create -f base.yml \
+    && conda env create -f mof_env.yml \
+    && conda env create -f tf_env.yml \
+    # && echo "source activate base" > ~/.bashrc \
+    && export PATH=/opt/conda/envs/base/bin:$PATH \
+    && conda clean -afy
 
-# Copy the rest of the app's source code to the container
-COPY . .
+# Install Python packages
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Build the React app
+# Build frontend assets
+FROM node:16.14.0-alpine3.14 AS build
+WORKDIR /app
+COPY src/package.json src/package-lock.json ./
+RUN npm ci
+COPY src/ ./
 RUN npm run build
 
-# Install Python and miniconda
-RUN apt-get update && apt-get install -y python3
-RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-RUN chmod +x Miniconda3-latest-Linux-x86_64.sh
-RUN ./Miniconda3-latest-Linux-x86_64.sh -b -p /opt/conda
-ENV PATH /opt/conda/bin:$PATH
+# Production image
+FROM base AS production
 
-# Create and activate the MOF environment
-COPY /env/mof_env.yml .
-RUN conda env create -f mof_env.yml
-RUN echo "conda activate mof_env" >> ~/.bashrc
-SHELL ["/bin/bash", "-c"]
-RUN conda init bash
+# Copy the backend code and frontend assets
+COPY backend/ .
 
-# Create and activate the TF environment
-COPY /env/tf_env.yml .
-RUN conda env create -f tf_env.yml
-RUN echo "conda activate tf_env" >> ~/.bashrc
-SHELL ["/bin/bash", "-c"]
-RUN conda init bash
+# Copy the built frontend assets
+COPY --from=build /app/build/ ./static/
 
-# Install IPython kernel for both environments
-RUN conda activate mof_env && python -m ipykernel install --user --name mof_env --display-name "mof_env"
-RUN conda activate tf_env && python -m ipykernel install --user --name tf_env --display-name "tf_env"
-
-# Expose the port that the Flask API will run on
-EXPOSE 5000
-
-# # Define the command that will run when the Docker container starts
-# CMD ["conda", "run", "-n", "tf_env", "python", "run_api.py"]
+# Start the Flask app
+CMD ["python", "app.py"]
