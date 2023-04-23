@@ -108,7 +108,7 @@ def predict():
     return jsonify(output)
 
 
-@app.route('/data', methods=['GET'])
+@app.route('/data', methods=['POST'])
 def get_data():
     # get mof_name from request
     mof_name = request.json['mof_name']
@@ -117,24 +117,26 @@ def get_data():
     # initial data
     output = {
         'name': mof_name+".cif",
-        'Phi_void': None,
-        'Phi_acc': None,
-        'density': None,
-        'poreV_void': None,
-        'poreV_acc': None,
-        'Di': None,
-        'Df': None,
-        'Dif': None,
-        'volume': None,
-        'ASA_A2': None,
-        'ASA_m2/cm3': None,
-        'ASA_m2/g': None,
-        'NASA_A2': None,
-        'NASA_m2/cm3': None,
-        'NASA_m2/g': None,
-        'weight': None,
-        'CO2_adsorption': None
+        'Phi_void': -99,
+        'Phi_acc': -99,
+        'density': -99,
+        'poreV_void': -99,
+        'poreV_acc': -99,
+        'Di': -99,
+        'Df': -99,
+        'Dif': -99,
+        'volume': -99,
+        'ASA_A2': -99,
+        'ASA_m2/cm3': -99,
+        'ASA_m2/g': -99,
+        'NASA_A2': -99,
+        'NASA_m2/cm3': -99,
+        'NASA_m2/g': -99,
+        'weight': -99,
+        'CO2_adsorption': -99
     }
+
+    print("API", "PASS")
 
     if os.path.exists(os.path.join(
             '../src/extracted', mof_name+'_result.csv')):
@@ -161,57 +163,64 @@ def get_data():
             'weight': data['weight'],
             'CO2_adsorption': data['CO2_adsorption']
         }
+        print("API1 PASS")
     elif os.path.exists(os.path.join(
             '../src/extracted', mof_name+'_combine.csv')):
         result = pd.read_csv(os.path.join(
             '../src/extracted', mof_name+'_combine.csv'))
         data = result.iloc[0]
-        output['name']: data['name']
-        output['Phi_void']: data['Phi_void']
-        output['Phi_acc']: data['Phi_acc']
-        output['density']: data['density']
-        output['poreV_void']: data['poreV_void']
-        output['poreV_acc']: data['poreV_acc']
-        output['Di']: data['Di']
-        output['Df']: data['Df']
-        output['Dif']: data['Dif']
-        output['volume']: data['volume']
-        output['ASA_A2']: data['ASA_A2']
-        output['ASA_m2/cm3']: data['ASA_m2/cm3']
-        output['ASA_m2/g']: data['ASA_m2/g']
-        output['NASA_A2']: data['NASA_A2']
-        output['NASA_m2/cm3']: data['NASA_m2/cm3']
-        output['NASA_m2/g']: data['NASA_m2/g']
-        output['weight']: data['weight']
+        output['name'] = data['name']
+        output['Phi_void'] = data['Phi_void']
+        output['Phi_acc'] = data['Phi_acc']
+        output['density'] = data['density']
+        output['poreV_void'] = data['poreV_void']
+        output['poreV_acc'] = data['poreV_acc']
+        output['Di'] = data['Di']
+        output['Df'] = data['Df']
+        output['Dif'] = data['Dif']
+        output['volume'] = data['volume']
+        output['ASA_A2'] = data['ASA_A2']
+        output['ASA_m2/cm3'] = data['ASA_m2/cm3']
+        output['ASA_m2/g'] = data['ASA_m2/g']
+        output['NASA_A2'] = data['NASA_A2']
+        output['NASA_m2/cm3'] = data['NASA_m2/cm3']
+        output['NASA_m2/g'] = data['NASA_m2/g']
+        output['weight'] = data['weight']
+        print("API2 PASS")
     else:
         if os.path.exists(os.path.join(
                 '../src/extracted', mof_name+'_porE.csv')):
             result = pd.read_csv(os.path.join(
                 '../src/extracted', mof_name+'_porE.csv'))
             data = result.iloc[0]
-            output['name']: data['name']
-            output['Phi_void']: data['Phi_void']
-            output['Phi_acc']: data['Phi_acc']
-            output['density']: data['density']
-            output['poreV_void']: data['poreV_void']
-            output['poreV_acc']: data['poreV_acc']
+            output['name'] = data['name']
+            output['Phi_void'] = data['Phi_void']
+            output['Phi_acc'] = data['Phi_acc']
+            output['density'] = data['density']
+            output['poreV_void'] = data['poreV_void']
+            output['poreV_acc'] = data['poreV_acc']
+            print("API3 PASS")
+        else:
+            print("NOT EXIST3")
         if os.path.exists(os.path.join(
                 '../src/extracted', mof_name+'_zeo.csv')):
             result = pd.read_csv(os.path.join(
                 '../src/extracted', mof_name+'_zeo.csv'))
-            output['name']: data['name']
-            output['Di']: data['Di']
-            output['Df']: data['Df']
-            output['Dif']: data['Dif']
-            output['volume']: data['volume']
-            output['ASA_A2']: data['ASA_A2']
-            output['ASA_m2/cm3']: data['ASA_m2/cm3']
-            output['ASA_m2/g']: data['ASA_m2/g']
-            output['NASA_A2']: data['NASA_A2']
-            output['NASA_m2/cm3']: data['NASA_m2/cm3']
-            output['NASA_m2/g']: data['NASA_m2/g']
-            output['weight']: data['weight']
-            
+            output['name'] = data['name']
+            output['Di'] = data['Di']
+            output['Df'] = data['Df']
+            output['Dif'] = data['Dif']
+            output['volume'] = data['volume']
+            output['ASA_A2'] = data['ASA_A2']
+            output['ASA_m2/cm3'] = data['ASA_m2/cm3']
+            output['ASA_m2/g'] = data['ASA_m2/g']
+            output['NASA_A2'] = data['NASA_A2']
+            output['NASA_m2/cm3'] = data['NASA_m2/cm3']
+            output['NASA_m2/g'] = data['NASA_m2/g']
+            output['weight'] = data['weight']
+            print("API4 PASS")
+        else:
+            print("NOT EXIST4")
     return jsonify(output)
 
 

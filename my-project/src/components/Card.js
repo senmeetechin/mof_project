@@ -12,10 +12,21 @@ function Card(props) {
   const fname = props.fname;
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(null);
   const [porE, setPorE] = useState(null);
   const [zeo, setZeo] = useState(null);
   const [predict, setPredict] = useState(null);
+
+  useEffect(() => {
+    axios
+      .post("/data", {
+        mof_name: fname,
+      })
+      .then((res) => {
+        setData(res.data);
+        console.log("DATA", res.data);
+      });
+  }, [step]);
 
   useEffect(() => {
     const getPorE = axios.post("/getPorE", {
@@ -45,7 +56,6 @@ function Card(props) {
               .then((res) => {
                 setStep((step) => step + 1);
                 setPredict(res.data);
-                console.log("Prediction", res.data)
               })
               .catch((error) => {
                 console.log("Predict error", error);
@@ -92,52 +102,192 @@ function Card(props) {
           <div className="col-span-2 h-full relative my-auto">
             {<MOFViz id="mole-1-show" fpath={fname} />}
           </div>
-          <div className="col-span-3 text-left flex flex-col mr-8 gap-2">
+          <div className="col-span-3 text-left flex flex-col mr-6 gap-2">
             <p className="text-2xl font-bold font-fontHead mb-1">{fname}</p>
-            <div className="flex justify-between font-fontContent">
-              <p>Molecular weight:</p>
-              <p>5,312.93 u</p>
+            <div className="flex flex-col h-48 gap-2 overflow-y-auto">
+              <div className="flex justify-between font-fontContent">
+                <p>Largest included sphere:</p>
+                {data && data["Di"] !== -99 ? (
+                  <p>
+                    <span>{data && data["Di"].toFixed(2)}</span> Å
+                  </p>
+                ) : (
+                  <p>extracting...</p>
+                )}
+              </div>
+              <div className="flex justify-between font-fontContent">
+                <p>Largest free sphere:</p>
+                {data && data["Df"] !== -99 ? (
+                  <p>
+                    <span>{data && data["Df"].toFixed(2)}</span> Å
+                  </p>
+                ) : (
+                  <p>extracting...</p>
+                )}
+              </div>
+              <div className="flex justify-between font-fontContent">
+                <p>Largest included sphere along free sphere path:</p>
+                {data && data["Dif"] !== -99 ? (
+                  <p>
+                    <span>{data && data["Dif"].toFixed(2)}</span> Å
+                  </p>
+                ) : (
+                  <p>extracting...</p>
+                )}
+              </div>
+              <div className="flex justify-between font-fontContent">
+                <p>Volume:</p>
+                {data && data["volume"] !== -99 ? (
+                  <p>
+                    <span>{data && data["volume"].toFixed(2)}</span> Å
+                    <sup>3</sup>
+                  </p>
+                ) : (
+                  <p>extracting...</p>
+                )}
+              </div>
+              <div className="flex justify-between font-fontContent">
+                <p>Density:</p>
+                {data && data["density"] !== -99 ? (
+                  <p>
+                    <span>{data && data["density"].toFixed(2)}</span> g/cm
+                    <sup>3</sup>
+                  </p>
+                ) : (
+                  <p>extracting...</p>
+                )}
+              </div>
+              <div className="flex justify-between font-fontContent">
+                <p>Accessible surface area per unit cell:</p>
+                {data && data["ASA_A2"] !== -99 ? (
+                  <p>
+                    <span>{data && data["ASA_A2"].toFixed(2)}</span> Å
+                    <sup>2</sup>
+                  </p>
+                ) : (
+                  <p>extracting...</p>
+                )}
+              </div>
+              <div className="flex justify-between font-fontContent">
+                <p>Accessible surface area per volume:</p>
+                {data && data["ASA_m2/cm3"] !== -99 ? (
+                  <p>
+                    <span>{data && data["ASA_m2/cm3"].toFixed(2)}</span> m
+                    <sup>2</sup>
+                    /cm<sup>3</sup>
+                  </p>
+                ) : (
+                  <p>extracting...</p>
+                )}
+              </div>
+              <div className="flex justify-between font-fontContent">
+                <p>Accessible surface area per mass:</p>
+                {data ? (
+                  <p>
+                    <span>{data && data["ASA_m2/g"].toFixed(2)}</span> m
+                    <sup>2</sup>/g
+                  </p>
+                ) : (
+                  <p>extracting...</p>
+                )}
+              </div>
+              <div className="flex justify-between font-fontContent">
+                <p>Non-accessible surface area per unit cell:</p>
+                {data && data["NASA_A2"] !== -99 ? (
+                  <p>
+                    <span>{data && data["NASA_A2"].toFixed(2)}</span> Å
+                    <sup>2</sup>
+                  </p>
+                ) : (
+                  <p>extracting...</p>
+                )}
+              </div>
+              <div className="flex justify-between font-fontContent">
+                <p>Non-accessible surface area per volume:</p>
+                {data && data["NASA_m2/cm3"] !== -99 ? (
+                  <p>
+                    <span>{data && data["NASA_m2/cm3"].toFixed(2)}</span> m
+                    <sup>2</sup>
+                    /cm
+                    <sup>3</sup>
+                  </p>
+                ) : (
+                  <p>extracting...</p>
+                )}
+              </div>
+              <div className="flex justify-between font-fontContent">
+                <p>Non-accessible surface area per mass:</p>
+                {data && data["NASA_m2/g"] !== -99 ? (
+                  <p>
+                    <span>{data && data["NASA_m2/g"].toFixed(2)}</span> m
+                    <sup>2</sup>/g
+                  </p>
+                ) : (
+                  <p>extracting...</p>
+                )}
+              </div>
+              <div className="flex justify-between font-fontContent">
+                <p>Void porosity:</p>
+                {data && data["Phi_void"] !== -99 ? (
+                  <p>
+                    <span>{data && data["Phi_void"].toFixed(2)}</span> %
+                  </p>
+                ) : (
+                  <p>extracting...</p>
+                )}
+              </div>
+              <div className="flex justify-between font-fontContent">
+                <p>Accessible porosity:</p>
+                {data && data["Phi_acc"] !== -99 ? (
+                  <p>
+                    <span>{data && data["Phi_acc"].toFixed(2)}</span> %
+                  </p>
+                ) : (
+                  <p>extracting...</p>
+                )}
+              </div>
+              <div className="flex justify-between font-fontContent">
+                <p>Pore volume density with reference to void porosity:</p>
+                {data && data["poreV_void"] !== -99 ? (
+                  <p>
+                    <span>{data && data["poreV_void"].toFixed(2)}</span> cm
+                    <sup>3</sup>/g
+                  </p>
+                ) : (
+                  <p>extracting...</p>
+                )}
+              </div>
+              <div className="flex justify-between font-fontContent">
+                <p>Pore volume density with reference to void porosity:</p>
+                {data ? (
+                  <p>
+                    <span>{data && data["poreV_acc"].toFixed(2)}</span> cm
+                    <sup>3</sup>/g
+                  </p>
+                ) : (
+                  <p>extracting...</p>
+                )}
+              </div>
             </div>
-            <div className="flex justify-between font-fontContent">
-              <p>Unit cell volume:</p>
-              <p>
-                21,383.00 A<sup>3</sup>
-              </p>
-            </div>
-            <div className="flex justify-between font-fontContent">
-              <p>Density:</p>
-              <p>
-                412.60 g/cm<sup>3</sup>
-              </p>
-            </div>
-            <div className="flex justify-between font-fontContent">
-              <p>Void porosity :</p>
-              <p>84.45 %</p>
-            </div>
-            <div className="flex justify-between font-fontContent">
-              <p>Accessible porosity :</p>
-              <p>80.86 %</p>
-            </div>
-            <div className="flex justify-between font-fontContent">
-              <p>Accessible surface area per volume:</p>
-              <p>
-                1,887.66 m<sup>2</sup>/cm<sup>3</sup>
-              </p>
-            </div>
-            <div className="flex justify-between font-fontContent">
-              <p>Largest included sphere:</p>
-              <p>16.13 A</p>
-            </div>
-            <div className="flex justify-between font-fontContent mb-1">
-              <p>Largest free sphere:</p>
-              <p>10.92 A</p>
-            </div>
+            {data && data["CO2_adsorption"] !== -99 && (
+              <div className="flex justify-between font-fontContent mr-2 mt-1">
+                <p>
+                  CO<sub>2</sub> adsorption capacity:
+                </p>
+                
+                <p>
+                  <span>{data && data["CO2_adsorption"].toFixed(2)}</span>{" "}
+                  mmol/g
+                </p>
+                
+              </div>
+            )}
             <a
               href="https://drive.google.com/uc?export=download&id=1jerlAGOcoKxXp1RsssT9l_dF0KaZ7EfL"
               // target="_blank"
               rel="noreferrer"
             >
-              <button className="border-darkButton border-2 rounded-full text-darkButton text-base py-1 w-full mt-auto font-fontHead cursor-pointer hover:bg-darkButton hover:text-white flex justify-center">
+              <button className="border-darkButton border-2 rounded-full text-darkButton text-base py-1 w-full mt-2 font-fontHead cursor-pointer hover:bg-darkButton hover:text-white flex justify-center">
                 <FiDownload className="my-auto mr-2" />
                 download result (.csv)
               </button>
@@ -148,7 +298,7 @@ function Card(props) {
       ),
       showCloseButton: true,
       showConfirmButton: false,
-      width: 880,
+      width: 1000,
     });
   };
   return (
@@ -167,9 +317,9 @@ function Card(props) {
         <div className="w-full h-full relative">
           <HiOutlineZoomIn
             className="absolute z-10 right-0 top-0 text-xl text-gray-500 hover:text-gray-800 cursor-pointer bg-white rounded-bl-sm"
-            onClick={zoomIn}
+            onClick={zoomIn()}
           />
-          {/* {fname} */}
+
           {<MOFViz id="mole-1" fpath={fname} />}
         </div>
       </div>
