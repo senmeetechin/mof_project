@@ -11,9 +11,9 @@ def remove_if_exist(fpath):
     else:
         print("NOT EXIST")
 
-def predict(mof_name, model_path, scaler_path):
+def predict(mof_name, model_path, scaler_path, extracted_path):
     mof_nname = mof_name.split('/')[-1].replace('.cif', '')
-    feature_df = pd.read_csv(os.path.join('../src/extracted', mof_nname+'_combine.csv'))
+    feature_df = pd.read_csv(os.path.join(extracted_path, mof_nname+'_combine.csv'))
     feature_drop_name = feature_df.drop(columns=['name'])
     feature_data = np.array(feature_drop_name)
     
@@ -36,13 +36,14 @@ def predict(mof_name, model_path, scaler_path):
     # upadte prediction to csv
     result = feature_df.copy()
     result['CO2_adsorption'] = prediction[0][0]
-    result.to_csv(os.path.join('../src/extracted', mof_nname+'_result.csv'), index=False)
+    result.to_csv(os.path.join(extracted_path, mof_nname+'_result.csv'), index=False)
     
     # remove combine.csv
-    remove_if_exist(os.path.join('../src/extracted', mof_nname+'_combine.csv'))
+    remove_if_exist(os.path.join(extracted_path, mof_nname+'_combine.csv'))
 
 if __name__ == '__main__':
     mof_name = sys.argv[1]
     model_path  = sys.argv[2]
     scaler_path = sys.argv[3]
-    predict(mof_name, model_path, scaler_path)
+    extracted_path = sys.argv[4]
+    predict(mof_name, model_path, scaler_path, extracted_path)

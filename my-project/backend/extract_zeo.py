@@ -100,16 +100,16 @@ def get_data_zeo(mof_path, PROBE_SIZE=2.004, N_SAMPLING=10000):
     dataframe = pd.DataFrame(mof_data, index=[0])
     return dataframe
 
-def extract_zeo(mof_path):
+def extract_zeo(mof_path, extracted_path):
     try:
         mof_data = get_data_zeo(mof_path)
         mof_name = mof_path.split('/')[-1].replace('.cif', '')
-        mof_data.to_csv(os.path.join('../src/extracted', mof_name+'_zeo.csv'), index=False)
+        mof_data.to_csv(os.path.join(extracted_path, mof_name+'_zeo.csv'), index=False)
         print(f'{mof_name} has already extracted by zeo')
     except:
         print(f'{mof_name} failed to extract by zeo')
 
 if __name__ == "__main__":
     mof_path = sys.argv[1]
-    # print(mof_path)
-    extract_zeo(mof_path)
+    extracted_path = sys.argv[2]
+    extract_zeo(mof_path, extracted_path)

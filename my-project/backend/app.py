@@ -10,7 +10,8 @@ import pandas as pd
 app = Flask(__name__)
 
 # set upload folder
-UPLOAD_DIR = '../src/upload'
+UPLOAD_DIR = './upload'
+EXTRACTED_DIR = './extracted'
 MODEL_PATH = './model/best_model_78_0.06193.h5'
 SCALER_PATH = './static/minmaxScaler.joblib'
 
@@ -42,7 +43,7 @@ def get_porE():
 
     # Run extract_porE.py
     cmd = ['conda', 'run', '-n', 'mof_env',
-           'python', './extract_porE.py', mof_path]
+           'python', './extract_porE.py', mof_path, EXTRACTED_DIR]
     process = subprocess.Popen(
         cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output, error = process.communicate()
@@ -57,7 +58,7 @@ def get_zeo():
 
     # Run extract_zeo.py
     cmd = ['conda', 'run', '-n', 'mof_env',
-           'python', './extract_zeo.py', mof_path]
+           'python', './extract_zeo.py', mof_path, EXTRACTED_DIR]
     process = subprocess.Popen(
         cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output, error = process.communicate()
@@ -70,7 +71,7 @@ def combine_feature():
 
     # Run combine_feature.py
     cmd = ['conda', 'run', '-n', 'mof_env',
-           'python', './combine_feature.py', mof_name]
+           'python', './combine_feature.py', mof_name, EXTRACTED_DIR]
     process = subprocess.Popen(
         cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output, error = process.communicate()
@@ -84,15 +85,15 @@ def predict():
     mof_name = request.json['mof_name']
 
     cmd = ['conda', 'run', '-n', 'tf_env', 'python',
-           './predict.py', mof_name, MODEL_PATH, SCALER_PATH]
+           './predict.py', mof_name, MODEL_PATH, SCALER_PATH, EXTRACTED_DIR]
     process = subprocess.Popen(
         cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output, error = process.communicate()
 
     # format the output as JSON and return
-    if os.path.exists(os.path.join('../src/extracted', mof_name.replace('.cif', '')+'_result.csv')):
+    if os.path.exists(os.path.join(EXTRACTED_DIR, mof_name.replace('.cif', '')+'_result.csv')):
         result = pd.read_csv(os.path.join(
-            '../src/extracted', mof_name.replace('.cif', '')+'_result.csv'))
+            EXTRACTED_DIR, mof_name.replace('.cif', '')+'_result.csv'))
         result = str(result['CO2_adsorption'][0])
     else:
         result = "0.0"
@@ -139,9 +140,9 @@ def get_data():
     print("API", "PASS")
 
     if os.path.exists(os.path.join(
-            '../src/extracted', mof_name+'_result.csv')):
+            EXTRACTED_DIR, mof_name+'_result.csv')):
         result = pd.read_csv(os.path.join(
-            '../src/extracted', mof_name+'_result.csv'))
+            EXTRACTED_DIR, mof_name+'_result.csv'))
         data = result.iloc[0]
         output = {
             'name': data['name'],
@@ -165,9 +166,9 @@ def get_data():
         }
         print("API1 PASS")
     elif os.path.exists(os.path.join(
-            '../src/extracted', mof_name+'_combine.csv')):
+            EXTRACTED_DIR, mof_name+'_combine.csv')):
         result = pd.read_csv(os.path.join(
-            '../src/extracted', mof_name+'_combine.csv'))
+            EXTRACTED_DIR, mof_name+'_combine.csv'))
         data = result.iloc[0]
         output['name'] = data['name']
         output['Phi_void'] = data['Phi_void']
@@ -189,9 +190,9 @@ def get_data():
         print("API2 PASS")
     else:
         if os.path.exists(os.path.join(
-                '../src/extracted', mof_name+'_porE.csv')):
+                EXTRACTED_DIR, mof_name+'_porE.csv')):
             result = pd.read_csv(os.path.join(
-                '../src/extracted', mof_name+'_porE.csv'))
+                EXTRACTED_DIR, mof_name+'_porE.csv'))
             data = result.iloc[0]
             output['name'] = data['name']
             output['Phi_void'] = data['Phi_void']
@@ -203,9 +204,9 @@ def get_data():
         else:
             print("NOT EXIST3")
         if os.path.exists(os.path.join(
-                '../src/extracted', mof_name+'_zeo.csv')):
+                EXTRACTED_DIR, mof_name+'_zeo.csv')):
             result = pd.read_csv(os.path.join(
-                '../src/extracted', mof_name+'_zeo.csv'))
+                EXTRACTED_DIR, mof_name+'_zeo.csv'))
             output['name'] = data['name']
             output['Di'] = data['Di']
             output['Df'] = data['Df']

@@ -1,35 +1,43 @@
 # Use an official Python runtime as a parent image
 FROM python:3.8-slim-buster
+#continuumio/miniconda3
+
+# using mac m1
+FROM --platform=linux/amd64 ubuntu:20.04
 
 # Set the working directory to /app
 WORKDIR /app
 
-# Copy the conda environment files into the container
-COPY ./env/mof_env.yml ./env/mof_env.yml
-COPY ./env/tf_env.yml ./env/tf_env.yml
+# # Copy the conda environment files into the container
+# COPY ./env/mof_env.yml ./env/mof_env.yml
+# COPY ./env/tf_env.yml ./env/tf_env.yml
 
-# Create the conda environments from the files
+# # Install miniconda
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends wget bzip2 ca-certificates && \
-    wget -q https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
-    /bin/bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/conda && \
-    rm Miniconda3-latest-Linux-x86_64.sh && \
-    /opt/conda/bin/conda env create -f ./env/mof_env.yml && \
-    /opt/conda/bin/conda env create -f ./env/tf_env.yml && \
-    /opt/conda/bin/conda clean -afy && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install -y --no-install-recommends wget bzip2 ca-certificates gfortran build-essential
+#     wget -q https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+#     /bin/bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/conda && \
+#     rm Miniconda3-latest-Linux-x86_64.sh
 
-# # Copy the requirements.txt file into the container
-# COPY requirements.txt .
+# # Create conda environments and base env
+# RUN /opt/conda/bin/conda env create -f ./env/mof_env.yml && \
+#     /opt/conda/bin/conda env create -f ./env/tf_env.yml && \
+#     /opt/conda/bin/conda install -c anaconda flask pandas && \
+#     /opt/conda/bin/conda clean -afy && \
+#     rm -rf /var/lib/apt/lists/*
 
-# # Install any needed packages specified in requirements.txt
-# RUN pip install --no-cache-dir -r requirements.txt
+# Copy the zeo++ program and install it
+COPY ./zeo\+\+-0.3.tar.gz ./zeo\+\+-0.3.tar.gz
+RUN gunzip zeo\+\+-0.3.tar.gz
+RUN tar xvf zeo\+\+-0.3.tar
+WORKDIR /app/zeo\+\+-0.3/voro\+\+/src
+RUN make
+WORKDIR /app/zeo\+\+-0.3/
+RUN make
+WORKDIR /app
 
 # Copy the rest of the application code into the container
 COPY . .
-
-# Set the environment variable to activate the conda environment for Flask
-ENV PATH /opt/conda/envs/mof_env/bin:$PATH
 
 # Expose the port that the Flask app will run on
 EXPOSE 5000

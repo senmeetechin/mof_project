@@ -3,7 +3,8 @@ import React, { useEffect } from 'react';
 
 function MOFViz(props) {
   const fname = props.fpath;
-  const file = require("../upload/" + fname)
+  const file = require("../../backend/upload/" + fname)
+  
   
   useEffect(() => {
     // Initialize the 3Dmol.js viewer

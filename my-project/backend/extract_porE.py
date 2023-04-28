@@ -63,16 +63,16 @@ def PorE(mof_cif, PROBE_R=2.004, grid_density = 10):
     dataframe = pd.DataFrame(data, index=[0])
     return dataframe
 
-def extract_pore(mof_path):
+def extract_pore(mof_path, extracted_path):
     try:
         mof_data = PorE(mof_path)
         mof_name = mof_path.split('/')[-1].replace('.cif', '')
-        mof_data.to_csv(os.path.join('../src/extracted', mof_name+'_porE.csv'), index=False)
+        mof_data.to_csv(os.path.join(extracted_path, mof_name+'_porE.csv'), index=False)
         print(f'{mof_name} has already extracted by porE')
     except:
         print(f'{mof_name} failed to extract by porE')
 
 if __name__ == '__main__':
     mof_path = sys.argv[1]
-    # print(mof_path)
-    extract_pore(mof_path)
+    extracted_path = sys.argv[2]
+    extract_pore(mof_path, extracted_path)
