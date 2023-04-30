@@ -47,3 +47,4 @@ if __name__ == '__main__':
     scaler_path = sys.argv[3]
     extracted_path = sys.argv[4]
     predict(mof_name, model_path, scaler_path, extracted_path)
+    # predict('str_m6_o46_o47_etb_sym.3.cif', './model/best_model_78_0.06193.h5', './static/minmaxScaler.joblib', './extracted')

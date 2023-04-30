@@ -25,7 +25,7 @@ def test():
 @app.route('/upload', methods=['POST'])
 def upload_files():
     if 'file' not in request.files:
-        return jsonify({'error': 'No file part'})
+        return jsonify({'error': 'No file path'})
 
     files = request.files.getlist('file')
     if files:
@@ -33,6 +33,22 @@ def upload_files():
             filename = file.filename
             file.save(os.path.join(UPLOAD_DIR, filename))
         return jsonify({'message': 'File uploaded succesfully'})
+    else:
+        return jsonify({'error': 'No file content'})
+
+
+@app.route('/cifContent', methods=['POST'])
+def get_cif_content():
+    # Get mof name
+    mof_name = request.json['mof_name']
+    mof_path = os.path.join(UPLOAD_DIR, mof_name)
+
+    # Read content in cif file
+    with open(mof_path, 'r') as f:
+        lines = f.read()
+
+    output = {'cifData': lines}
+    return jsonify(output)
 
 
 @app.route('/getPorE', methods=['POST'])
@@ -161,7 +177,7 @@ def get_data():
             'NASA_A2': data['NASA_A2'],
             'NASA_m2/cm3': data['NASA_m2/cm3'],
             'NASA_m2/g': data['NASA_m2/g'],
-            'weight': data['weight'],
+            # 'weight': data['weight'],
             'CO2_adsorption': data['CO2_adsorption']
         }
         print("API1 PASS")
@@ -186,7 +202,7 @@ def get_data():
         output['NASA_A2'] = data['NASA_A2']
         output['NASA_m2/cm3'] = data['NASA_m2/cm3']
         output['NASA_m2/g'] = data['NASA_m2/g']
-        output['weight'] = data['weight']
+        # output['weight'] = data['weight']
         print("API2 PASS")
     else:
         if os.path.exists(os.path.join(
@@ -207,6 +223,7 @@ def get_data():
                 EXTRACTED_DIR, mof_name+'_zeo.csv')):
             result = pd.read_csv(os.path.join(
                 EXTRACTED_DIR, mof_name+'_zeo.csv'))
+            data = result.iloc[0]
             output['name'] = data['name']
             output['Di'] = data['Di']
             output['Df'] = data['Df']
@@ -218,7 +235,7 @@ def get_data():
             output['NASA_A2'] = data['NASA_A2']
             output['NASA_m2/cm3'] = data['NASA_m2/cm3']
             output['NASA_m2/g'] = data['NASA_m2/g']
-            output['weight'] = data['weight']
+            # output['weight'] = data['weight']
             print("API4 PASS")
         else:
             print("NOT EXIST4")

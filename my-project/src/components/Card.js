@@ -14,6 +14,7 @@ function Card(props) {
   const fname = props.fname;
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
+  const [cifData, setCifData] = useState(null);
   const [data, setData] = useState(null);
   const [porE, setPorE] = useState(null);
   const [zeo, setZeo] = useState(null);
@@ -31,6 +32,17 @@ function Card(props) {
   }, [step]);
 
   useEffect(() => {
+    async function getCifContent() {
+      const response = await axios.post("/cifContent", {
+        mof_name: fname,
+      });
+      setCifData(response.data.cifData);
+      setStep((step) => step + 1);
+    }
+    getCifContent();
+  }, []);
+
+  useEffect(() => {
     const getPorE = axios.post("/getPorE", {
       mof_name: fname,
     });
@@ -42,7 +54,6 @@ function Card(props) {
       .then(([poreRes, zeoRes]) => {
         setStep((step) => step + 1);
         setPorE(poreRes.status);
-        setStep((step) => step + 1);
         setZeo(zeoRes.status);
 
         axios
@@ -50,6 +61,7 @@ function Card(props) {
             mof_name: fname,
           })
           .then((_) => {
+            console.log("PREDICT PASS")
             setStep((step) => step + 1);
             axios
               .post("/predict", {
@@ -102,7 +114,9 @@ function Card(props) {
       html: (
         <div className="grid grid-cols-5 py-3 gap-5">
           <div className="col-span-2 h-full relative my-auto">
-            {<MOFViz id="mole-1-show" fpath={fname} />}
+            {cifData && (
+              <MOFViz id="mole-1-show" fpath={fname} cifData={cifData} />
+            )}
           </div>
           <div className="col-span-3 text-left flex flex-col mr-6 gap-2">
             <p className="text-2xl font-bold font-fontHead mb-1">{fname}</p>
@@ -303,7 +317,7 @@ function Card(props) {
 
   const downloadResult = () => {
     var name = fname.replace(".cif", "") + "_result.csv";
-    var dataPath = require("../extracted/" + name);
+    var dataPath = require("../../backend/extracted/" + name);
     saveAs(dataPath, name);
   };
 
@@ -326,7 +340,7 @@ function Card(props) {
             onClick={zoomIn}
           />
 
-          {<MOFViz id="mole-1" fpath={fname} />}
+          {cifData && <MOFViz id="mole-1" fpath={fname} cifData={cifData} />}
         </div>
       </div>
       <div className="flex justify-center h-16 items-center">
