@@ -6,8 +6,8 @@
 .pnp.js
 
 # folder
-/backend/extracted
-/backend/upload
+/backend/extracted/*
+/backend/upload/*
 
 # testing
 /coverage
