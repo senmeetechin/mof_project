@@ -37,10 +37,10 @@ RUN make
 WORKDIR /app
 
 # Copy the rest of the application code into the container
-COPY . .
+COPY /backend /app
 
 # Expose the port that the Flask app will run on
 EXPOSE 5000
 
 # Start the Flask app
-CMD ["python", "./backend/app.py"]
+CMD ["python", "./app.py"]

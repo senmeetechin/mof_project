@@ -6,17 +6,28 @@ WORKDIR /app
 
 # Copy the current directory contents into the container at /app
 COPY ./backend /app
-COPY ./zeo\+\+-0.3tar.gz /app
-COPY ./env/mof_env.yml /app/env/mof_env.yml
-COPY ./env/tf_env.yml /app/env/tf_env.yml
+COPY ./zeo\+\+-0.3.tar.gz /app/zeo\+\+-0.3.tar.gz
+COPY ./env /app/env
 
 # apt get required packages
 RUN apt-get update && \
     apt-get install -y --no-install-recommends wget bzip2 ca-certificates gfortran build-essential
 
-# Create conda environments and base env
-RUN conda env create -f ./env/mof_env.yml && \
-    conda env create -f ./env/tf_env.yml && \
+# Create mof_env conda environments
+RUN conda create -n mof_env python=3.9 && \
+    echo "conda activate mof_env" >> ~/.bashrc && \
+    /bin/bash -c "source ~/.bashrc" && \
+    pip install numpy==1.22 && \
+    pip install pandas porE
+
+# Create tf_env conda environments
+RUN conda create -n tf_env tensorflow && \
+    echo "conda activate tf_env" >> ~/.bashrc && \
+    /bin/bash -c "source ~/.bashrc" && \
+    pip install numpy pandas joblib
+
+# Set base conda environments
+RUN echo "source activate base" >> ~/.bashrc && \
     conda install -c anaconda flask pandas && \
     conda clean -afy && \
     rm -rf /var/lib/apt/lists/*
@@ -30,12 +41,8 @@ WORKDIR /app/zeo\+\+-0.3/
 RUN make
 WORKDIR /app
 
-
 # Make port 80 available to the world outside this container
 EXPOSE 5000
 
-# Define environment variable
-ENV NAME conda_env
-
 # Run app.py when the container launches
-CMD ["python", "backend/app.py"]
+CMD ["python", "./app.py"]
