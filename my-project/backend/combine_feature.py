@@ -41,9 +41,9 @@ def combine_feature(mof_name, extracted_path):
     df_out.to_csv(os.path.join(extracted_path,
                   mof_nname+'_combine.csv'), index=False)
 
-    # remove extracted PorE and Zeo++
-    remove_if_exist(os.path.join(extracted_path, mof_nname+'_porE.csv'))
-    remove_if_exist(os.path.join(extracted_path, mof_nname+'_zeo.csv'))
+    # # remove extracted PorE and Zeo++
+    # remove_if_exist(os.path.join(extracted_path, mof_nname+'_porE.csv'))
+    # remove_if_exist(os.path.join(extracted_path, mof_nname+'_zeo.csv'))
 
 
 if __name__ == "__main__":

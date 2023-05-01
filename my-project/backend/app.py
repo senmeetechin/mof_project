@@ -22,6 +22,40 @@ def test():
     return jsonify(output)
 
 
+@app.route('/files', methods=['GET'])
+def get_files():
+    output = {
+        'upload': os.listdir(UPLOAD_DIR),
+        'extracted': os.listdir(EXTRACTED_DIR)
+    }
+    return jsonify(output)
+
+
+@app.route('/testEnv', methods=['POST'])
+def test_env():
+    # Get mof
+    env_name = request.json['env_name']
+
+    # Conda activate mof_env
+    cmd = ['conda', 'activate', env_name]
+    process = subprocess.Popen(
+        cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    output, error = process.communicate()
+    if process.returncode != 0:
+        print("Error getPorE", error.decode('utf-8'))
+        return {"error activate": error.decode('utf-8')}, 500
+
+    # Conda list
+    cmd = ['conda', 'list']
+    process = subprocess.Popen(
+        cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    output, error = process.communicate()
+    if process.returncode != 0:
+        print("Error getPorE", error.decode('utf-8'))
+        return {"error list": error.decode('utf-8')}, 500
+    return {"message": output.decode('utf-8')}, 200
+
+
 @app.route('/upload', methods=['POST'])
 def upload_files():
     if 'file' not in request.files:
@@ -63,7 +97,10 @@ def get_porE():
     process = subprocess.Popen(
         cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output, error = process.communicate()
-    return "", 204
+    if process.returncode != 0:
+        print("Error getPorE", error.decode('utf-8'))
+        return {"error": error.decode('utf-8')}, 500
+    return {"message": output.decode('utf-8')}, 200
 
 
 @app.route('/getZeo', methods=['POST'])
@@ -78,7 +115,10 @@ def get_zeo():
     process = subprocess.Popen(
         cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output, error = process.communicate()
-    return "", 204
+    if process.returncode != 0:
+        print("Error getZeo", error.decode('utf-8'))
+        return {"error": error.decode('utf-8')}, 500
+    return {"message": output.decode('utf-8')}, 200
 
 
 @app.route('/combineFeature', methods=['POST'])
@@ -91,8 +131,10 @@ def combine_feature():
     process = subprocess.Popen(
         cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output, error = process.communicate()
-    # print("\n=== OUTPUT ===\n", output.decode('utf-8'))
-    return "", 204
+    if process.returncode != 0:
+        print("Error combineFeature", error.decode('utf-8'))
+        return {"error": error.decode('utf-8')}, 500
+    return {"message": output.decode('utf-8')}, 200
 
 
 @app.route('/predict', methods=['POST'])
@@ -105,6 +147,9 @@ def predict():
     process = subprocess.Popen(
         cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output, error = process.communicate()
+    if process.returncode != 0:
+        print("Error predict", error.decode('utf-8'))
+        return {"error": error.decode('utf-8')}, 500
 
     # format the output as JSON and return
     if os.path.exists(os.path.join(EXTRACTED_DIR, mof_name.replace('.cif', '')+'_result.csv')):
@@ -241,16 +286,18 @@ def get_data():
             print("NOT EXIST4")
     return jsonify(output)
 
+
 @app.route('/download', methods=['POST'])
 def download_result():
     # get mof_name from request
     mof_name = request.json['mof_name']
     mof_name = mof_name.replace('.cif', '')
-    
+
     file_path = os.path.join(EXTRACTED_DIR, mof_name+'_result.csv')
     # print(file_path)
     return send_file(file_path, mimetype='text/csv', as_attachment=True)
 
+
 if __name__ == '__main__':
     # Start the Flask application
-    app.run(debug=True)
+    app.run(debug=True, port=5000, host='0.0.0.0')

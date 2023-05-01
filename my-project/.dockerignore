@@ -1,4 +1,7 @@
 /node_modules
 /build
 /zeo\+\+-0.3
+/backend/extracted/*
+/backend/upload/*
+/backend/test.py
 .firebase
