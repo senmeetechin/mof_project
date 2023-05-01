@@ -61,7 +61,7 @@ function Card(props) {
             mof_name: fname,
           })
           .then((_) => {
-            console.log("PREDICT PASS")
+            console.log("PREDICT PASS");
             setStep((step) => step + 1);
             axios
               .post("/predict", {
@@ -300,7 +300,7 @@ function Card(props) {
             <button
               className="border-darkButton border-2 rounded-full text-darkButton text-base py-1 w-full mt-2 font-fontHead cursor-pointer hover:bg-darkButton hover:text-white flex justify-center disabled:bg-white disabled:text-darkButton disabled:cursor-wait"
               disabled={data && data["CO2_adsorption"] !== -99 ? false : true}
-              // onClick={downloadResult}
+              onClick={downloadResult}
             >
               <FiDownload className="my-auto mr-2" />
               download result (.csv)
@@ -315,11 +315,24 @@ function Card(props) {
     });
   };
 
-  // const downloadResult = () => {
-  //   var name = fname.replace(".cif", "") + "_result.csv";
-  //   var dataPath = require("../../backend/extracted/" + name);
-  //   saveAs(dataPath, name);
-  // };
+  const downloadResult = () => {
+    axios
+      .post(
+        "/download",
+        {
+          mof_name: fname,
+        }
+      )
+      .then((res) => {
+        const csvName = fname.replace(".cif", "") + "_result.csv"
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", csvName);
+        document.body.appendChild(link);
+        link.click();
+      });
+  };
 
   return (
     <div className="relative flex flex-col h-80 w-80 bg-white rounded-2xl">

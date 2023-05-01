@@ -2,7 +2,7 @@ import subprocess
 import sys
 
 ### Prediction API ###
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_file
 import os
 import pandas as pd
 
@@ -241,6 +241,15 @@ def get_data():
             print("NOT EXIST4")
     return jsonify(output)
 
+@app.route('/download', methods=['POST'])
+def download_result():
+    # get mof_name from request
+    mof_name = request.json['mof_name']
+    mof_name = mof_name.replace('.cif', '')
+    
+    file_path = os.path.join(EXTRACTED_DIR, mof_name+'_result.csv')
+    # print(file_path)
+    return send_file(file_path, mimetype='text/csv', as_attachment=True)
 
 if __name__ == '__main__':
     # Start the Flask application
