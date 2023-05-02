@@ -8,6 +8,7 @@
 # folder
 /backend/extracted/*
 /backend/upload/*
+/backend/test*
 
 # testing
 /coverage

@@ -38,8 +38,8 @@ def predict(mof_name, model_path, scaler_path, extracted_path):
     result['CO2_adsorption'] = prediction[0][0]
     result.to_csv(os.path.join(extracted_path, mof_nname+'_result.csv'), index=False)
     
-    # # remove combine.csv
-    # remove_if_exist(os.path.join(extracted_path, mof_nname+'_combine.csv'))
+    # remove combine.csv
+    remove_if_exist(os.path.join(extracted_path, mof_nname+'_combine.csv'))
 
 if __name__ == '__main__':
     mof_name = sys.argv[1]

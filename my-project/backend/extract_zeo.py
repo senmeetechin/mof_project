@@ -13,7 +13,7 @@ def clear_zeo_files(mof_name):
         os.remove(mof_name+"_output_sa.txt")
 
 # Create output files
-def create_zeo_files(mof_name, mof_cif, ZEO_PATH='../zeo++-0.3/', PROBE_SIZE=2.004, N_SAMPLING=10000):
+def create_zeo_files(mof_name, mof_cif, ZEO_PATH='./zeo++-0.3/', PROBE_SIZE=2.004, N_SAMPLING=10000):
     # Set zeo++ command
     pd_cmd = 'network -ha -res '+ mof_name+'_output_pd.txt ' + mof_cif       # Pore diameter
     sa_cmd = 'network -sa ' + str(PROBE_SIZE) + ' ' + str(PROBE_SIZE) + ' ' + str(N_SAMPLING) + ' ' + mof_name + '_output_sa.txt ' + mof_cif       # Surface_area

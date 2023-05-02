@@ -30,30 +30,34 @@ def get_files():
     }
     return jsonify(output)
 
-
-@app.route('/testEnv', methods=['POST'])
-def test_env():
+@app.route('/csv', methods=['POST'])
+def get_csv_content():
     # Get mof
-    env_name = request.json['env_name']
+    mof_name = request.json['mof_name']
+    mof_name = mof_name.replace('.cif', '')
 
-    # Conda activate mof_env
-    cmd = ['conda', 'activate', env_name]
-    process = subprocess.Popen(
-        cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    output, error = process.communicate()
-    if process.returncode != 0:
-        print("Error getPorE", error.decode('utf-8'))
-        return {"error activate": error.decode('utf-8')}, 500
+    # Initialize output
+    output = {
+        'porE': {},
+        'zeo': {},
+        'combine': {},
+        'predict': {},
+    }
 
-    # Conda list
-    cmd = ['conda', 'list']
-    process = subprocess.Popen(
-        cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    output, error = process.communicate()
-    if process.returncode != 0:
-        print("Error getPorE", error.decode('utf-8'))
-        return {"error list": error.decode('utf-8')}, 500
-    return {"message": output.decode('utf-8')}, 200
+    # Read csv if it exists
+    if os.path.exists(os.path.join(EXTRACTED_DIR, mof_name+"_porE.csv")):
+        output['porE'] = pd.read_csv(os.path.join(
+            EXTRACTED_DIR, mof_name+"_porE.csv")).T.to_dict()[0]
+    if os.path.exists(os.path.join(EXTRACTED_DIR, mof_name+"_zeo.csv")):
+        output['zeo'] = pd.read_csv(os.path.join(
+            EXTRACTED_DIR, mof_name+"_zeo.csv")).T.to_dict()[0]
+    if os.path.exists(os.path.join(EXTRACTED_DIR, mof_name+"_combine.csv")):
+        output['combine'] = pd.read_csv(os.path.join(
+            EXTRACTED_DIR, mof_name+"_combine.csv")).T.to_dict()[0]
+    if os.path.exists(os.path.join(EXTRACTED_DIR, mof_name+"_result.csv")):
+        output['predict'] = pd.read_csv(os.path.join(
+            EXTRACTED_DIR, mof_name+"_result.csv")).T.to_dict()[0]
+    return jsonify(output)
 
 
 @app.route('/upload', methods=['POST'])
