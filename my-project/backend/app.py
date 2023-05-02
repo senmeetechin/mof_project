@@ -30,6 +30,7 @@ def get_files():
     }
     return jsonify(output)
 
+
 @app.route('/csv', methods=['POST'])
 def get_csv_content():
     # Get mof
@@ -304,4 +305,4 @@ def download_result():
 
 if __name__ == '__main__':
     # Start the Flask application
-    app.run(debug=True, port=5000, host='0.0.0.0')
+    app.run(debug=True, port=int(os.environ.get('PORT', 5000)), host='0.0.0.0')
