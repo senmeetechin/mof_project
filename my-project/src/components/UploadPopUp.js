@@ -3,14 +3,15 @@ import CIFfile from "../assets/file.png";
 
 function UploadPopUp(props) {
   const fileList = props.fileList;
-  const clickSelector = props.clickSelector;
   const handleFileChange = props.handleFileChange;
   const handleUpload = props.handleUpload;
 
+  const clickSelector = () => {
+    document.getElementById("fileInput").click();
+  };
+
   return (
-    <div
-      className="flex flex-col items-center justify-center mx-5 mt-5"
-    >
+    <div className="flex flex-col items-center justify-center mx-5 mt-5">
       {fileList.length === 0 ? (
         <div className="w-full h-60 flex justify-center items-center border-2 border-dashed rounded-lg">
           <button
@@ -28,7 +29,7 @@ function UploadPopUp(props) {
           </button>
         </div>
       ) : (
-        <div className="w-full h-60 flex gap-2 justify-center items-center border-2 border-dashed rounded-lg">
+        <div className="w-full h-60 flex flex-col gap-2 justify-center items-center border-2 border-dashed rounded-lg overflow-y-auto">
           {fileList.map((f, i) => {
             return (
               <div
@@ -70,7 +71,7 @@ function UploadPopUp(props) {
           select new mof
         </button>
         <input
-          // multiple
+          multiple
           type="file"
           accept=".cif"
           id="fileInput"

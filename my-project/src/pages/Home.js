@@ -44,10 +44,6 @@ function Home() {
       });
   };
 
-  const clickSelector = () => {
-    document.getElementById("fileInput").click();
-  };
-
   const resetFileList = () => {
     setFileList([]);
   };
@@ -58,7 +54,6 @@ function Home() {
         html: (
           <UploadPopUp
             fileList={fileList}
-            clickSelector={clickSelector}
             handleFileChange={handleFileChange}
             handleUpload={handleUpload}
           />
@@ -79,7 +74,6 @@ function Home() {
       html: (
         <UploadPopUp
           fileList={fileList}
-          clickSelector={clickSelector}
           handleFileChange={handleFileChange}
           handleUpload={handleUpload}
         />

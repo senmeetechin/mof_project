@@ -119,7 +119,7 @@ function Card(props) {
         <div className="grid grid-cols-5 py-3 gap-5">
           <div className="col-span-2 h-full relative my-auto">
             {cifData && (
-              <MOFViz id="mole-1-show" fpath={fname} cifData={cifData} />
+              <MOFViz id={fname+"-zoom"} fpath={fname} cifData={cifData} />
             )}
           </div>
           <div className="col-span-3 text-left flex flex-col mr-6 gap-2">
@@ -354,7 +354,7 @@ function Card(props) {
             onClick={zoomIn}
           />
 
-          {cifData && <MOFViz id="mole-1" fpath={fname} cifData={cifData} />}
+          {cifData && <MOFViz id={fname+"-show"} fpath={fname} cifData={cifData} />}
         </div>
       </div>
       <div className="flex justify-center h-16 items-center">
