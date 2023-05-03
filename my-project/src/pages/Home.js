@@ -1,16 +1,20 @@
 import Background from "../components/Background";
 import GitHub from "../components/GitHub";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import UploadPopUp from "../components/UploadPopUp";
 
 const client = axios.create({
-  baseURL: "https://mof2co2-backend-b6fb5aeiza-as.a.run.app",
+  baseURL: "http://127.0.0.1:5000", //"https://mof2co2-backend-b6fb5aeiza-as.a.run.app",
 });
 
 function Home() {
   const navigate = useNavigate();
   const [fileList, setFileList] = useState([]);
+  const MySwal = withReactContent(Swal);
 
   const handleFileChange = (event) => {
     const collectedFiles = Array.from(event.target.files);
@@ -30,7 +34,7 @@ function Home() {
         },
       })
       .then((res) => {
-        console.log("Upload result", res.data)
+        MySwal.close();
         navigate("/upload", {
           state: { fileList: fileList.map((file) => file.name) },
         });
@@ -42,6 +46,57 @@ function Home() {
 
   const clickSelector = () => {
     document.getElementById("fileInput").click();
+  };
+
+  const resetFileList = () => {
+    setFileList([]);
+  };
+
+  useEffect(() => {
+    if (fileList.length !== 0) {
+      MySwal.update({
+        html: (
+          <UploadPopUp
+            fileList={fileList}
+            clickSelector={clickSelector}
+            handleFileChange={handleFileChange}
+            handleUpload={handleUpload}
+          />
+        ),
+        showCancelButton: false,
+        showConfirmButton: false,
+        showCloseButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Yes, delete it!",
+        width: 600,
+      });
+    }
+  }, [fileList]);
+
+  const selectMof = () => {
+    MySwal.fire({
+      html: (
+        <UploadPopUp
+          fileList={fileList}
+          clickSelector={clickSelector}
+          handleFileChange={handleFileChange}
+          handleUpload={handleUpload}
+        />
+      ),
+      showCancelButton: false,
+      showConfirmButton: false,
+      showCloseButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+      width: 600,
+    }).then((result) => {
+      if (result.isDismissed) {
+        resetFileList();
+        // document.getElementById("fileInput").click();
+      }
+    });
   };
 
   return (
@@ -57,44 +112,15 @@ function Home() {
               Predicting Carbon Dioxide Adsorption Capacity of Metal-organic
               Framework in 3 Step
             </p>
-            <p>Upload .CIF | Visualize MOF | Get data</p>
-            <div className="text-base mt-4">
-              {fileList.length > 0 &&
-                fileList.map((file, i) => {
-                  return (
-                    <span key={i}>
-                      {file.name}
-                      {i === fileList.length - 1 ? "" : ", "}
-                    </span>
-                  );
-                })}
-            </div>
+            <p className="">Upload .CIF | Visualize MOF | Get data</p>
           </div>
           <div className="flex justify-center gap-2">
-            (
             <button
               className="border-textHead border-2 rounded-full text-textHead text-xl py-1 px-28 font-fontHead cursor-pointer hover:bg-textHead hover:text-bgColor"
-              onClick={clickSelector}
+              onClick={selectMof}
             >
               Select MOF (.cif)
             </button>
-            ){" "}
-            {fileList.length > 0 && (
-              <button
-                className="border-textHead border-2 rounded-full text-textHead text-xl py-1 px-28 font-fontHead cursor-pointer hover:bg-textHead hover:text-bgColor"
-                onClick={handleUpload}
-              >
-                UPLOAD MOF
-              </button>
-            )}
-            <input
-              // multiple
-              type="file"
-              accept=".cif"
-              id="fileInput"
-              onChange={handleFileChange}
-              className="hidden"
-            />
           </div>
         </div>
       </header>

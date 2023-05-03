@@ -11,7 +11,7 @@ import { saveAs } from "file-saver";
 import { download } from "3dmol";
 
 const client = axios.create({
-  baseURL: "https://mof2co2-backend-b6fb5aeiza-as.a.run.app",
+  baseURL: "http://127.0.0.1:5000" //"https://mof2co2-backend-b6fb5aeiza-as.a.run.app",
 });
 
 function Card(props) {
@@ -33,7 +33,7 @@ function Card(props) {
         setData(res.data);
         console.log("DATA", res.data);
       });
-  }, [step]);
+  }, [fname, step]);
 
   useEffect(() => {
     async function getCifContent() {
@@ -44,7 +44,7 @@ function Card(props) {
       setStep((step) => step + 1);
     }
     getCifContent();
-  }, []);
+  }, [fname]);
 
   useEffect(() => {
     const getPorE = client.post("/getPorE", {
@@ -83,7 +83,7 @@ function Card(props) {
       .catch((error) => {
         console.log("Extract error", error);
       });
-  }, []);
+  }, [fname]);
 
   const closeCard = () => {
     const MySwal = withReactContent(Swal);
