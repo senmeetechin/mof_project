@@ -4,7 +4,6 @@ import { HiOutlineZoomIn } from "react-icons/hi";
 import { FiDownload } from "react-icons/fi";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -14,9 +13,7 @@ const client = axios.create({
 
 function Card(props) {
   const fname = props.fname;
-  const index = props.index;
-  const setRemoveIndex = props.setRemoveIndex;
-  const navigate = useNavigate();
+  const setRemoveName = props.setRemoveName;
   const [step, setStep] = useState(0);
   const [cifData, setCifData] = useState(null);
   const [data, setData] = useState(null);
@@ -107,7 +104,7 @@ function Card(props) {
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire("Deleted!", name + " has been deleted.", "success");
-        setRemoveIndex(index);
+        setRemoveName(name);
       }
     });
   };
@@ -336,7 +333,10 @@ function Card(props) {
   };
 
   return (
-    <div className="relative flex flex-col h-80 w-80 bg-white rounded-2xl">
+    <div
+      className="relative flex flex-col h-80 w-80 bg-white rounded-2xl"
+      key={fname}
+    >
       <div className="bg-gray-300 rounded-t-2xl text-center py-1 text-xl font-fontContent h-10 relative">
         <p title={fname}>
           {fname.slice(0, 20)}

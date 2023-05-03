@@ -9,7 +9,7 @@ function UploadPage() {
   const { state } = useLocation();
   const initFileList = state.fileList;
   const [fileList, setFileList] = useState([]);
-  const [removeIndex, setRemoveIndex] = useState(-1);
+  const [removeName, setRemoveName] = useState(null);
   const navigate = useNavigate();
 
   // Initialize file list
@@ -19,18 +19,20 @@ function UploadPage() {
 
   // Remove unwanted file in file list
   useEffect(() => {
-    if (removeIndex >= 0) {
+    if (removeName) {
       // Back to main page if fileList is empty
       if (fileList.length <= 1) {
         navigate("/");
       }
       // Remove unwanted file in list
       else {
-        setFileList((fileList) => fileList.splice(removeIndex, 1));
-        setRemoveIndex(-1);
+        const removeIndex = fileList.indexOf(removeName)
+        fileList.splice(removeIndex, 1);
+        setFileList(fileList);
+        setRemoveName(null);
       }
     }
-  }, [fileList, removeIndex]);
+  }, [fileList, removeName]);
 
   return (
     <div className="flex flex-col h-screen w-screen">
@@ -44,11 +46,10 @@ function UploadPage() {
         <div className="flex flex-col w-3/4 h-5/6 justify-between pb-5">
           <div className="flex justify-center gap-5 h-full w-full mb-10">
             {fileList.length !== 0 &&
-              fileList.map((name, index) => (
+              fileList.map((name) => (
                 <Card
                   fname={name}
-                  index={index}
-                  setRemoveIndex={setRemoveIndex}
+                  setRemoveName={setRemoveName}
                 />
               ))}
           </div>
