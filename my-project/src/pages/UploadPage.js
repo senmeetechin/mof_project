@@ -2,10 +2,36 @@ import Background from "../components/Background";
 import GitHub from "../components/GitHub";
 import Card from "../components/Card";
 import { useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-function UploadPage(props) {
+function UploadPage() {
   const { state } = useLocation();
-  const fileList = state.fileList;
+  const initFileList = state.fileList;
+  const [fileList, setFileList] = useState([]);
+  const [removeIndex, setRemoveIndex] = useState(-1);
+  const navigate = useNavigate();
+
+  // Initialize file list
+  useEffect(() => {
+    setFileList(initFileList);
+  }, [initFileList]);
+
+  // Remove unwanted file in file list
+  useEffect(() => {
+    if (removeIndex >= 0) {
+      // Back to main page if fileList is empty
+      if (fileList.length <= 1) {
+        navigate("/");
+      }
+      // Remove unwanted file in list
+      else {
+        setFileList((fileList) => fileList.splice(removeIndex, 1));
+        setRemoveIndex(-1);
+      }
+    }
+  }, [fileList, removeIndex]);
+
   return (
     <div className="flex flex-col h-screen w-screen">
       <GitHub />
@@ -18,7 +44,13 @@ function UploadPage(props) {
         <div className="flex flex-col w-3/4 h-5/6 justify-between pb-5">
           <div className="flex justify-center gap-5 h-full w-full mb-10">
             {fileList.length !== 0 &&
-              fileList.map((name) => <Card fname={name} />)}
+              fileList.map((name, index) => (
+                <Card
+                  fname={name}
+                  index={index}
+                  setRemoveIndex={setRemoveIndex}
+                />
+              ))}
           </div>
           <div className="flex justify-center">
             <button className="border-textHead border-2 bg-opacity-75 bg-bgColor rounded-full text-textHead text-xl py-1 w-1/4 font-fontHead cursor-pointer hover:bg-textHead hover:text-bgColor">

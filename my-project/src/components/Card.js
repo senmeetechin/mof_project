@@ -4,11 +4,9 @@ import { HiOutlineZoomIn } from "react-icons/hi";
 import { FiDownload } from "react-icons/fi";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { saveAs } from "file-saver";
-import { download } from "3dmol";
 
 const client = axios.create({
   baseURL: "http://127.0.0.1:5000", //"https://mof2co2-backend-b6fb5aeiza-as.a.run.app",
@@ -16,6 +14,8 @@ const client = axios.create({
 
 function Card(props) {
   const fname = props.fname;
+  const index = props.index;
+  const setRemoveIndex = props.setRemoveIndex;
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [cifData, setCifData] = useState(null);
@@ -107,7 +107,7 @@ function Card(props) {
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire("Deleted!", name + " has been deleted.", "success");
-        navigate("/");
+        setRemoveIndex(index);
       }
     });
   };
