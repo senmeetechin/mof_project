@@ -8,7 +8,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const client = axios.create({
-  baseURL: "http://127.0.0.1:5000", //"https://mof2co2-backend-b6fb5aeiza-as.a.run.app",
+  baseURL: "https://mof2co2-backend-b6fb5aeiza-as.a.run.app",
 });
 
 function Card(props) {
