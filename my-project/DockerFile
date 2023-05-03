@@ -12,6 +12,15 @@ COPY ./env /app/env
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends wget bzip2 ca-certificates gfortran build-essential
 
+# Copy the zeo++ program and install it
+RUN gunzip zeo\+\+-0.3.tar.gz
+RUN tar xvf zeo\+\+-0.3.tar
+WORKDIR /app/zeo\+\+-0.3/voro\+\+/src
+RUN make
+WORKDIR /app/zeo\+\+-0.3/
+RUN make
+WORKDIR /app
+
 # Create mof_env conda environments
 RUN conda create -n mof_env python=3.9
 SHELL [ "conda", "run", "-n", "mof_env", "/bin/bash", "-c" ]
@@ -32,19 +41,10 @@ RUN python -c "import tensorflow; import numpy; import pandas; import joblib; im
 # Set base conda environments
 # RUN echo "source activate base" >> ~/.bashrc
 SHELL [ "conda", "run", "-n", "base", "/bin/bash", "-c" ]
-RUN conda install -c anaconda flask pandas
-RUN python -c "import flask; import pandas"
+RUN conda install -c anaconda flask flask-cors pandas
+RUN python -c "import flask; import flask_cors; import pandas"
 RUN conda clean -afy
 RUN rm -rf /var/lib/apt/lists/*
-
-# Copy the zeo++ program and install it
-RUN gunzip zeo\+\+-0.3.tar.gz
-RUN tar xvf zeo\+\+-0.3.tar
-WORKDIR /app/zeo\+\+-0.3/voro\+\+/src
-RUN make
-WORKDIR /app/zeo\+\+-0.3/
-RUN make
-WORKDIR /app
 
 # Copy current directory contents into the container at /app
 COPY ./backend /app

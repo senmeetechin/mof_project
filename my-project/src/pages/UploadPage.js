@@ -1,9 +1,7 @@
 import Background from "../components/Background";
 import GitHub from "../components/GitHub";
 import Card from "../components/Card";
-import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import axios from "axios";
 
 function UploadPage(props) {
   const { state } = useLocation();

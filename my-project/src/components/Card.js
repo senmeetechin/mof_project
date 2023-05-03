@@ -10,6 +10,10 @@ import axios from "axios";
 import { saveAs } from "file-saver";
 import { download } from "3dmol";
 
+const client = axios.create({
+  baseURL: "https://mof2co2-backend-b6fb5aeiza-as.a.run.app",
+});
+
 function Card(props) {
   const fname = props.fname;
   const navigate = useNavigate();
@@ -21,7 +25,7 @@ function Card(props) {
   const [predict, setPredict] = useState(null);
 
   useEffect(() => {
-    axios
+    client
       .post("/data", {
         mof_name: fname,
       })
@@ -33,7 +37,7 @@ function Card(props) {
 
   useEffect(() => {
     async function getCifContent() {
-      const response = await axios.post("/cifContent", {
+      const response = await client.post("/cifContent", {
         mof_name: fname,
       });
       setCifData(response.data.cifData);
@@ -43,10 +47,10 @@ function Card(props) {
   }, []);
 
   useEffect(() => {
-    const getPorE = axios.post("/getPorE", {
+    const getPorE = client.post("/getPorE", {
       mof_name: fname,
     });
-    const getZeo = axios.post("/getZeo", {
+    const getZeo = client.post("/getZeo", {
       mof_name: fname,
     });
 
@@ -56,14 +60,14 @@ function Card(props) {
         setPorE(poreRes.status);
         setZeo(zeoRes.status);
 
-        axios
+        client
           .post("/combineFeature", {
             mof_name: fname,
           })
           .then((_) => {
             console.log("PREDICT PASS");
             setStep((step) => step + 1);
-            axios
+            client
               .post("/predict", {
                 mof_name: fname,
               })
@@ -316,15 +320,12 @@ function Card(props) {
   };
 
   const downloadResult = () => {
-    axios
-      .post(
-        "/download",
-        {
-          mof_name: fname,
-        }
-      )
+    client
+      .post("/download", {
+        mof_name: fname,
+      })
       .then((res) => {
-        const csvName = fname.replace(".cif", "") + "_result.csv"
+        const csvName = fname.replace(".cif", "") + "_result.csv";
         const url = window.URL.createObjectURL(new Blob([res.data]));
         const link = document.createElement("a");
         link.href = url;

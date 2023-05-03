@@ -4,6 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 
+const client = axios.create({
+  baseURL: "https://mof2co2-backend-b6fb5aeiza-as.a.run.app",
+});
+
 function Home() {
   const navigate = useNavigate();
   const [fileList, setFileList] = useState([]);
@@ -19,19 +23,20 @@ function Home() {
       formData.append(`file`, file, file.name);
     });
 
-    axios
+    client
       .post("/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       })
-      .then((response) => {
+      .then((res) => {
+        console.log("Upload result", res.data)
         navigate("/upload", {
           state: { fileList: fileList.map((file) => file.name) },
         });
       })
       .catch((error) => {
-        console.log(error);
+        console.log("Upload error:", error);
       });
   };
 

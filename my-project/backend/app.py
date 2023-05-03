@@ -3,11 +3,14 @@ import sys
 
 ### Prediction API ###
 from flask import Flask, jsonify, request, send_file
+from flask_cors import CORS
 import os
 import pandas as pd
 
 # Initialize Flask application
 app = Flask(__name__)
+# Use CORS
+CORS(app)
 
 # set upload folder
 UPLOAD_DIR = './upload'
