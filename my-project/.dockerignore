@@ -4,4 +4,5 @@
 /backend/extracted/*
 /backend/upload/*
 /backend/test.py
+/backend/zeo*
 .firebase

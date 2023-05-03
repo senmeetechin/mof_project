@@ -9,6 +9,7 @@
 /backend/extracted/*
 /backend/upload/*
 /backend/test*
+/backend/zeo*
 
 # testing
 /coverage
