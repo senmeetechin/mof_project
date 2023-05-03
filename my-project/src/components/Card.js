@@ -11,7 +11,7 @@ import { saveAs } from "file-saver";
 import { download } from "3dmol";
 
 const client = axios.create({
-  baseURL: "http://127.0.0.1:5000" //"https://mof2co2-backend-b6fb5aeiza-as.a.run.app",
+  baseURL: "http://127.0.0.1:5000", //"https://mof2co2-backend-b6fb5aeiza-as.a.run.app",
 });
 
 function Card(props) {
@@ -119,7 +119,7 @@ function Card(props) {
         <div className="grid grid-cols-5 py-3 gap-5">
           <div className="col-span-2 h-full relative my-auto">
             {cifData && (
-              <MOFViz id={fname+"-zoom"} fpath={fname} cifData={cifData} />
+              <MOFViz id={fname + "-zoom"} fpath={fname} cifData={cifData} />
             )}
           </div>
           <div className="col-span-3 text-left flex flex-col mr-6 gap-2">
@@ -354,7 +354,9 @@ function Card(props) {
             onClick={zoomIn}
           />
 
-          {cifData && <MOFViz id={fname+"-show"} fpath={fname} cifData={cifData} />}
+          {cifData && (
+            <MOFViz id={fname + "-show"} fpath={fname} cifData={cifData} />
+          )}
         </div>
       </div>
       <div className="flex justify-center h-16 items-center">
@@ -384,7 +386,12 @@ function Card(props) {
               </span>{" "}
               mmol/g
             </p>
-            <FiDownload className="my-auto" />
+            <button
+              className="opacity-60 hover:opacity-100"
+              onClick={downloadResult}
+            >
+              <FiDownload className="my-auto" />
+            </button>
           </div>
         )}
       </div>
